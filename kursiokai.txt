@@ -1,0 +1,4 @@
+Vardas      Pavarde     ND1 ND2 ND3 ND4 ND5 Egzaminas
+Arvydas     Sabonis     10  9   7   8   8   9
+Rimas       Kurtinaitis 9   6   10  7   9   10
+Modestas    Paulauskas  8   8   6   9   10  7
