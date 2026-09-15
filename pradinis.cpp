@@ -29,7 +29,12 @@ int main()
     std::cin >> atsakymas1;
     if (atsakymas1 == "taip")
     {
-        failo_skaitymas(grupe,failo_pavadinimas);
+        failo_skaitymas(grupe, failo_pavadinimas);
+        std::sort(grupe.begin(), grupe.end(), [](const studentas &A, const studentas &B)
+        {
+            if (A.vardas != B.vardas) return A.vardas < B.vardas;
+            return A.pavarde < B.pavarde;
+        });
     }
     else if (atsakymas1 == "ne")
     {
