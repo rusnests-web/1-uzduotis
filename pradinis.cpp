@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <fstream>
+#include <stdexcept>
 using std::string;
 using std::vector;
 struct studentas
@@ -29,7 +30,15 @@ int main()
     std::cin >> atsakymas1;
     if (atsakymas1 == "taip")
     {
-        failo_skaitymas(grupe, failo_pavadinimas);
+        try
+        {
+            failo_skaitymas(grupe, failo_pavadinimas);
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << e.what();
+            return 1;
+        }
         std::sort(grupe.begin(), grupe.end(), [](const studentas &A, const studentas &B)
         {
             if (A.vardas != B.vardas) return A.vardas < B.vardas;
@@ -228,11 +237,10 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
     std::ifstream failas(failo_pavadinimas);
     if (!failas.is_open())
     {
-        std::cerr << "Nepavyko atidaryti failo \n";
-        return;
+        throw std::runtime_error("Klaida: failas " + failo_pavadinimas + " nerastas arba jo nepavyko atidaryti \n");
     }
     std::string eilute;
-    if (std::getline(failas, eilute));
+    if (std::getline(failas, eilute))
     {
         int nd_kiekis = 0;
         int eil_ilgis = eilute.length();
