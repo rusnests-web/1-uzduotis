@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <stdexcept>
+#include <sstream>
 using std::string;
 using std::vector;
 struct studentas
@@ -269,11 +270,17 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
             for (int i = 0; i < nd_kiekis; i++)
             {
                 int paz;
-                failas >> paz;
+                if (!(failas >> paz)) 
+                {
+                    throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
+                }
                 A.nd.push_back(paz);
                 A.suma += paz;
             }
-            failas >> A.egz;
+            if (!(failas >> A.egz))
+            {
+                throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
+            }
             int k = A.nd.size();
             if (k > 0)
             {
