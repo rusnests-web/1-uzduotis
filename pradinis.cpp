@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <fstream>
+#include <stdexcept>
+#include <sstream>
 using std::string;
 using std::vector;
 struct studentas
@@ -29,7 +31,20 @@ int main()
     std::cin >> atsakymas1;
     if (atsakymas1 == "taip")
     {
-        failo_skaitymas(grupe,failo_pavadinimas);
+        try
+        {
+            failo_skaitymas(grupe, failo_pavadinimas);
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << e.what();
+            return 1;
+        }
+        std::sort(grupe.begin(), grupe.end(), [](const studentas &A, const studentas &B)
+        {
+            if (A.vardas != B.vardas) return A.vardas < B.vardas;
+            return A.pavarde < B.pavarde;
+        });
     }
     else if (atsakymas1 == "ne")
     {
@@ -46,7 +61,12 @@ int main()
                 std::cout << "Iveskite per tarpa studento varda ir pavarde: ";
                 std::cin >> A.vardas >> A.pavarde;
                 std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
-                std::cin >> k;
+                while (!(std::cin >> k) || k <= 0) 
+                {
+                    std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
+                    std::cin.clear();
+                    std::cin.ignore(10000, '\n');
+                }
                 std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (taip / ne): ";
                 std::string atsakymas3;
                 std::cin >> atsakymas3;
@@ -56,11 +76,21 @@ int main()
                     {
                         std::cout << "Iveskite " << i + 1 << " pazymi: ";
                         int a;
-                        std::cin >> a;
+                        while (!(std::cin >> a)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                         A.nd.push_back(a);
                     }
                     std::cout << "Iveskite egzamino pazymi: ";
-                    std::cin >> A.egz;
+                    while (!(std::cin >> A.egz)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                     A.suma = 0;
                     for (int p : A.nd) A.suma += p;
                         A.vidurkis = A.suma / k;
@@ -114,7 +144,12 @@ int main()
                 if (A.vardas == "q") break;
                 std::cin >> A.pavarde;
                 std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
-                std::cin >> k;
+                while (!(std::cin >> k) || k <= 0) 
+                {
+                    std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
+                    std::cin.clear();
+                    std::cin.ignore(10000, '\n');
+                }
                 std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (taip / ne): ";
                 std::string atsakymas3;
                 std::cin >> atsakymas3;
@@ -124,11 +159,21 @@ int main()
                     {
                         std::cout << "Iveskite " << i + 1 << " pazymi: ";
                         int a;
-                        std::cin >> a;
+                        while (!(std::cin >> a)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                         A.nd.push_back(a);
                     }
                     std::cout << "Iveskite egzamino pazymi: ";
-                    std::cin >> A.egz;
+                    while (!(std::cin >> A.egz)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                     A.suma = 0;
                     for (int p : A.nd) A.suma += p;
                         A.vidurkis = A.suma / k;
@@ -218,16 +263,21 @@ void printas(studentas &A, int pasirinkimas)
 
 void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinimas)
 {
-    std::cout << "Iveskite failo pavadinima: ";
-    std::cin >> failo_pavadinimas;
     std::ifstream failas(failo_pavadinimas);
-    if (!failas.is_open())
+    while (true) 
     {
-        std::cerr << "Nepavyko atidaryti failo \n";
-        return;
+        std::cout << "Iveskite failo pavadinima: ";
+        std::cin >> failo_pavadinimas;
+        failas.open(failo_pavadinimas);
+        if (failas.is_open()) 
+        {
+            break;
+        }
+        std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti.\n";
+        failas.clear();
     }
     std::string eilute;
-    if (std::getline(failas, eilute));
+    if (std::getline(failas, eilute))
     {
         int nd_kiekis = 0;
         int eil_ilgis = eilute.length();
@@ -256,11 +306,17 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
             for (int i = 0; i < nd_kiekis; i++)
             {
                 int paz;
-                failas >> paz;
+                if (!(failas >> paz)) 
+                {
+                    throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
+                }
                 A.nd.push_back(paz);
                 A.suma += paz;
             }
-            failas >> A.egz;
+            if (!(failas >> A.egz))
+            {
+                throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
+            }
             int k = A.nd.size();
             if (k > 0)
             {
