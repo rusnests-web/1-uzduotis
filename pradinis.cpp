@@ -71,11 +71,21 @@ int main()
                     {
                         std::cout << "Iveskite " << i + 1 << " pazymi: ";
                         int a;
-                        std::cin >> a;
+                        while (!(std::cin >> a)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                         A.nd.push_back(a);
                     }
                     std::cout << "Iveskite egzamino pazymi: ";
-                    std::cin >> A.egz;
+                    while (!(std::cin >> A.egz)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                     A.suma = 0;
                     for (int p : A.nd) A.suma += p;
                         A.vidurkis = A.suma / k;
@@ -139,11 +149,21 @@ int main()
                     {
                         std::cout << "Iveskite " << i + 1 << " pazymi: ";
                         int a;
-                        std::cin >> a;
+                        while (!(std::cin >> a)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                         A.nd.push_back(a);
                     }
                     std::cout << "Iveskite egzamino pazymi: ";
-                    std::cin >> A.egz;
+                    while (!(std::cin >> A.egz)) 
+                        {
+                            std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
+                            std::cin.clear();
+                            std::cin.ignore(10000, '\n');
+                        }
                     A.suma = 0;
                     for (int p : A.nd) A.suma += p;
                         A.vidurkis = A.suma / k;
@@ -233,12 +253,18 @@ void printas(studentas &A, int pasirinkimas)
 
 void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinimas)
 {
-    std::cout << "Iveskite failo pavadinima: ";
-    std::cin >> failo_pavadinimas;
     std::ifstream failas(failo_pavadinimas);
-    if (!failas.is_open())
+    while (true) 
     {
-        throw std::runtime_error("Klaida: failas " + failo_pavadinimas + " nerastas arba jo nepavyko atidaryti \n");
+        std::cout << "Iveskite failo pavadinima: ";
+        std::cin >> failo_pavadinimas;
+        failas.open(failo_pavadinimas);
+        if (failas.is_open()) 
+        {
+            break;
+        }
+        std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti.\n";
+        failas.clear();
     }
     std::string eilute;
     if (std::getline(failas, eilute))
