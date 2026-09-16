@@ -61,7 +61,12 @@ int main()
                 std::cout << "Iveskite per tarpa studento varda ir pavarde: ";
                 std::cin >> A.vardas >> A.pavarde;
                 std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
-                std::cin >> k;
+                while (!(std::cin >> k) || k <= 0) 
+                {
+                    std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
+                    std::cin.clear();
+                    std::cin.ignore(10000, '\n');
+                }
                 std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (taip / ne): ";
                 std::string atsakymas3;
                 std::cin >> atsakymas3;
@@ -139,7 +144,12 @@ int main()
                 if (A.vardas == "q") break;
                 std::cin >> A.pavarde;
                 std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
-                std::cin >> k;
+                while (!(std::cin >> k) || k <= 0) 
+                {
+                    std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
+                    std::cin.clear();
+                    std::cin.ignore(10000, '\n');
+                }
                 std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (taip / ne): ";
                 std::string atsakymas3;
                 std::cin >> atsakymas3;
