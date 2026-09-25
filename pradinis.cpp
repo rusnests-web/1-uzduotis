@@ -6,6 +6,8 @@
 #include <fstream>
 #include <stdexcept>
 #include <sstream>
+#include <random>
+#include <chrono>
 using std::string;
 using std::vector;
 struct studentas
@@ -19,6 +21,8 @@ struct studentas
 
 void printas(studentas &A, int pasirinkimas);
 void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinimas);
+void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
+void generavimo_testavimas();
 
 int main()
 {
@@ -26,196 +30,206 @@ int main()
     std::vector<studentas> grupe;
     std::string failo_pavadinimas;
     studentas A;
-    std::cout << "Ar norite skaityti studentu duomenis is failo? (taip / ne): ";
+    std::cout << "Ar norite sugeneruoti penkis atsitiktinius studentu sarasu failus? (t / n): ";
     string atsakymas1;
     std::cin >> atsakymas1;
-    if (atsakymas1 == "taip")
+    if (atsakymas1 == "t")
     {
-        try
-        {
-            failo_skaitymas(grupe, failo_pavadinimas);
-        }
-        catch (const std::exception &e)
-        {
-            std::cout << e.what();
-            return 1;
-        }
-        std::sort(grupe.begin(), grupe.end(), [](const studentas &A, const studentas &B)
-        {
-            if (A.vardas != B.vardas) return A.vardas < B.vardas;
-            return A.pavarde < B.pavarde;
-        });
+        generavimo_testavimas();
     }
-    else if (atsakymas1 == "ne")
+    else if (atsakymas1 == "n")
     {
-        std::cout << "Ar zinomas studentu skaicius sarase? (taip / ne): ";
+        std::cout << "Ar norite skaityti studentu duomenis is failo? (t / n): ";
         string atsakymas2;
         std::cin >> atsakymas2;
-        if (atsakymas2 == "taip")
+        if (atsakymas2 == "t")
         {
-            std::cout << "Iveskite studentu skaiciu sarase: ";
-            int n;
-            std::cin >> n;
-            for (int j = 0; j < n; j++)
+            try
             {
-                std::cout << "Iveskite per tarpa studento varda ir pavarde: ";
-                std::cin >> A.vardas >> A.pavarde;
-                std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
-                while (!(std::cin >> k) || k <= 0) 
+                failo_skaitymas(grupe, failo_pavadinimas);
+            }
+            catch (const std::exception &e)
+            {
+                std::cout << e.what();
+                return 1;
+            }
+            std::sort(grupe.begin(), grupe.end(), [](const studentas &A, const studentas &B)
+            {
+                if (A.vardas != B.vardas) return A.vardas < B.vardas;
+                return A.pavarde < B.pavarde;
+            });
+        }
+        else if (atsakymas2 == "n")
+        {
+            std::cout << "Ar zinomas studentu skaicius sarase? (t / n): ";
+            string atsakymas3;
+            std::cin >> atsakymas3;
+            if (atsakymas3 == "t")
+            {
+                std::cout << "Iveskite studentu skaiciu sarase: ";
+                int n;
+                std::cin >> n;
+                for (int j = 0; j < n; j++)
                 {
-                    std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
-                    std::cin.clear();
-                    std::cin.ignore(10000, '\n');
-                }
-                std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (taip / ne): ";
-                std::string atsakymas3;
-                std::cin >> atsakymas3;
-                if (atsakymas3 == "ne")
-                {
-                    for (int i = 0; i < k; i++)
+                    std::cout << "Iveskite per tarpa studento varda ir pavarde: ";
+                    std::cin >> A.vardas >> A.pavarde;
+                    std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
+                    while (!(std::cin >> k) || k <= 0) 
                     {
-                        std::cout << "Iveskite " << i + 1 << " pazymi: ";
-                        int a;
-                        while (!(std::cin >> a)) 
-                        {
-                            std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
-                            std::cin.clear();
-                            std::cin.ignore(10000, '\n');
-                        }
-                        A.nd.push_back(a);
+                        std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
+                        std::cin.clear();
+                        std::cin.ignore(10000, '\n');
                     }
-                    std::cout << "Iveskite egzamino pazymi: ";
-                    while (!(std::cin >> A.egz)) 
-                        {
-                            std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
-                            std::cin.clear();
-                            std::cin.ignore(10000, '\n');
-                        }
-                    A.suma = 0;
-                    for (int p : A.nd) A.suma += p;
-                        A.vidurkis = A.suma / k;
-                    std::sort(A.nd.begin(), A.nd.end());
-                    if (k % 2 == 0)
-                        A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
-                    else
-                        A.mediana = A.nd[k / 2];
-                    A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
-                    A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
-                    grupe.push_back(A);
-                    A.pavarde.clear();
-                    A.vardas.clear();
-                    A.nd.clear();
-                }
-                else if (atsakymas3 == "taip")
-                {
-                    for (int i = 0; i < k; i++)
+                    std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (t / n): ";
+                    string atsakymas4;
+                    std::cin >> atsakymas4;
+                    if (atsakymas4 == "n")
                     {
-                        int a = rand() % 10 + 1;
-                        A.nd.push_back(a);
-                        A.egz = a;
+                        for (int i = 0; i < k; i++)
+                        {
+                            std::cout << "Iveskite " << i + 1 << " pazymi: ";
+                            int a;
+                            while (!(std::cin >> a)) 
+                            {
+                                std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
+                                std::cin.clear();
+                                std::cin.ignore(10000, '\n');
+                            }
+                            A.nd.push_back(a);
+                        }
+                        std::cout << "Iveskite egzamino pazymi: ";
+                        while (!(std::cin >> A.egz)) 
+                            {
+                                std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
+                                std::cin.clear();
+                                std::cin.ignore(10000, '\n');
+                            }
+                        A.suma = 0;
+                        for (int p : A.nd) A.suma += p;
+                            A.vidurkis = A.suma / k;
+                        std::sort(A.nd.begin(), A.nd.end());
+                        if (k % 2 == 0)
+                            A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+                        else
+                            A.mediana = A.nd[k / 2];
+                        A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+                        A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+                        grupe.push_back(A);
+                        A.pavarde.clear();
+                        A.vardas.clear();
+                        A.nd.clear();
                     }
-                    std::cout <<"Sugeneruoti namu darbu pazymiai: ";
-                    for (int paz : A.nd) std::cout << paz << " ";
-                    std::cout << "\n";
-                    std::cout <<"Sugeneruotas egzamino pazymys: " << A.egz << "\n";
-                    A.suma = 0;
-                    for (int p : A.nd) A.suma += p;
-                        A.vidurkis = A.suma / k;
-                    std::sort(A.nd.begin(), A.nd.end());
-                    if (k % 2 == 0)
-                        A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
-                    else
-                        A.mediana = A.nd[k / 2];
-                    A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
-                    A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
-                    grupe.push_back(A);
-                    A.pavarde.clear();
-                    A.vardas.clear();
-                    A.nd.clear();
+                    else if (atsakymas4 == "t")
+                    {
+                        for (int i = 0; i < k; i++)
+                        {
+                            int a = rand() % 10 + 1;
+                            A.nd.push_back(a);
+                            A.egz = a;
+                        }
+                        std::cout <<"Sugeneruoti namu darbu pazymiai: ";
+                        for (int paz : A.nd) std::cout << paz << " ";
+                        std::cout << "\n";
+                        std::cout <<"Sugeneruotas egzamino pazymys: " << A.egz << "\n";
+                        A.suma = 0;
+                        for (int p : A.nd) A.suma += p;
+                            A.vidurkis = A.suma / k;
+                        std::sort(A.nd.begin(), A.nd.end());
+                        if (k % 2 == 0)
+                            A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+                        else
+                            A.mediana = A.nd[k / 2];
+                        A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+                        A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+                        grupe.push_back(A);
+                        A.pavarde.clear();
+                        A.vardas.clear();
+                        A.nd.clear();
+                    }
                 }
             }
-        }
-        else if (atsakymas2 == "ne")
-        {
-            while (true)
+            else if (atsakymas3 == "n")
             {
-                std::cout << "Iveskite per tarpa studento varda ir pavarde (arba iveskite q, jei norite baigti): ";
-                std::cin >> A.vardas;
-                if (A.vardas == "q") break;
-                std::cin >> A.pavarde;
-                std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
-                while (!(std::cin >> k) || k <= 0) 
+                while (true)
                 {
-                    std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
-                    std::cin.clear();
-                    std::cin.ignore(10000, '\n');
-                }
-                std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (taip / ne): ";
-                std::string atsakymas3;
-                std::cin >> atsakymas3;
-                if (atsakymas3 == "ne")
-                {
-                    for (int i = 0; i < k; i++)
+                    std::cout << "Iveskite per tarpa studento varda ir pavarde (arba iveskite q, jei norite baigti): ";
+                    std::cin >> A.vardas;
+                    if (A.vardas == "q") break;
+                    std::cin >> A.pavarde;
+                    std::cout << "Iveskite semestro namu darbu pazymiu kieki: ";
+                    while (!(std::cin >> k) || k <= 0) 
                     {
-                        std::cout << "Iveskite " << i + 1 << " pazymi: ";
-                        int a;
-                        while (!(std::cin >> a)) 
-                        {
-                            std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
-                            std::cin.clear();
-                            std::cin.ignore(10000, '\n');
-                        }
-                        A.nd.push_back(a);
+                        std::cout << "Klaida: pazymiu kiekis turi buti didesnis uz 0. Iveskite pazymiu kieki: ";
+                        std::cin.clear();
+                        std::cin.ignore(10000, '\n');
                     }
-                    std::cout << "Iveskite egzamino pazymi: ";
-                    while (!(std::cin >> A.egz)) 
-                        {
-                            std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
-                            std::cin.clear();
-                            std::cin.ignore(10000, '\n');
-                        }
-                    A.suma = 0;
-                    for (int p : A.nd) A.suma += p;
-                        A.vidurkis = A.suma / k;
-                    std::sort(A.nd.begin(), A.nd.end());
-                    if (k % 2 == 0)
-                        A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
-                    else
-                        A.mediana = A.nd[k / 2];
-                    A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
-                    A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
-                    grupe.push_back(A);
-                    A.pavarde.clear();
-                    A.vardas.clear();
-                    A.nd.clear();
-                }
-                else if (atsakymas3 == "taip")
-                {
-                    for (int i = 0; i < k; i++)
+                    std::cout << "Ar norite sugeneruoti atsitiktinius namu darbu ir egzamino pazymius? (t / n): ";
+                    std::string atsakymas4;
+                    std::cin >> atsakymas4;
+                    if (atsakymas4 == "ne")
                     {
-                        int a = rand() % 10 + 1;
-                        A.nd.push_back(a);
-                        A.egz = a;
+                        for (int i = 0; i < k; i++)
+                        {
+                            std::cout << "Iveskite " << i + 1 << " pazymi: ";
+                            int a;
+                            while (!(std::cin >> a)) 
+                            {
+                                std::cout << "Klaida: netaisyklingi duomenys, iveskite " << i + 1 << " pazymi (skaiciu): ";
+                                std::cin.clear();
+                                std::cin.ignore(10000, '\n');
+                            }
+                            A.nd.push_back(a);
+                        }
+                        std::cout << "Iveskite egzamino pazymi: ";
+                        while (!(std::cin >> A.egz)) 
+                            {
+                                std::cout << "Klaida: netaisyklingi duomenys, iveskite egzamino pazymi (skaiciu): ";
+                                std::cin.clear();
+                                std::cin.ignore(10000, '\n');
+                            }
+                        A.suma = 0;
+                        for (int p : A.nd) A.suma += p;
+                            A.vidurkis = A.suma / k;
+                        std::sort(A.nd.begin(), A.nd.end());
+                        if (k % 2 == 0)
+                            A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+                        else
+                            A.mediana = A.nd[k / 2];
+                        A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+                        A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+                        grupe.push_back(A);
+                        A.pavarde.clear();
+                        A.vardas.clear();
+                        A.nd.clear();
                     }
-                    std::cout <<"Sugeneruoti namu darbu pazymiai: ";
-                    for (int paz : A.nd) std::cout << paz << " ";
-                    std::cout << "\n";
-                    std::cout <<"Sugeneruotas egzamino pazymys: ";
-                    std::cout << A.egz << "\n";
-                    A.suma = 0;
-                    for (int p : A.nd) A.suma += p;
-                        A.vidurkis = A.suma / k;
-                    std::sort(A.nd.begin(), A.nd.end());
-                    if (k % 2 == 0)
-                        A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
-                    else
-                        A.mediana = A.nd[k / 2];
-                    A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
-                    A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
-                    grupe.push_back(A);
-                    A.pavarde.clear();
-                    A.vardas.clear();
-                    A.nd.clear();
+                    else if (atsakymas4 == "t")
+                    {
+                        for (int i = 0; i < k; i++)
+                        {
+                            int a = rand() % 10 + 1;
+                            A.nd.push_back(a);
+                            A.egz = a;
+                        }
+                        std::cout <<"Sugeneruoti namu darbu pazymiai: ";
+                        for (int paz : A.nd) std::cout << paz << " ";
+                        std::cout << "\n";
+                        std::cout <<"Sugeneruotas egzamino pazymys: ";
+                        std::cout << A.egz << "\n";
+                        A.suma = 0;
+                        for (int p : A.nd) A.suma += p;
+                            A.vidurkis = A.suma / k;
+                        std::sort(A.nd.begin(), A.nd.end());
+                        if (k % 2 == 0)
+                            A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+                        else
+                            A.mediana = A.nd[k / 2];
+                        A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+                        A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+                        grupe.push_back(A);
+                        A.pavarde.clear();
+                        A.vardas.clear();
+                        A.nd.clear();
+                    }
                 }
             }
         }
@@ -333,4 +347,44 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
         }
     }   
     failas.close();
+}
+
+void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis)
+{
+    std::ofstream outputas(failo_pavadinimas);
+    if (!outputas.is_open()) {
+        std::cerr << "Klaida kuriant faila: " << failo_pavadinimas << "\n";
+        return;
+    }
+    std::mt19937 rng(1337);
+    std::uniform_int_distribution<int> pazDist(1, 10);
+    outputas << "Vardas Pavarde ";
+    for (int j = 1; j <= nd_kiekis; ++j) {
+        outputas << "ND" << j << " ";
+    }
+    outputas << "Egz.\n";
+    for (size_t i = 1; i <= studentu_skaicius; ++i) {
+        outputas << "Vardas" << i << " " << "Pavarde" << i << " ";
+        for (int j = 0; j < nd_kiekis; ++j) {
+            outputas << pazDist(rng) << " ";
+        }
+        outputas << pazDist(rng) << "\n";
+    }
+    outputas.close();
+}
+
+void generavimo_testavimas() {
+    std::vector<size_t> dydziai = {1000, 10000, 100000, 1000000, 10000000};
+    std::mt19937 rng(42);
+    std::uniform_int_distribution<int> ndDist(7, 20);
+    for (size_t dydis : dydziai) {
+        std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
+        int nd_kiekis = ndDist(rng);
+        auto pradzia = std::chrono::high_resolution_clock::now();
+        failu_generavimas(failo_pavadinimas, dydis, nd_kiekis);
+        auto pabaiga = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> trukme = pabaiga - pradzia;
+        std::cout << dydis << " irasu failo (" << nd_kiekis 
+                  << " ND) sukurimo laikas: " << trukme.count() << "\n";
+    }
 }
