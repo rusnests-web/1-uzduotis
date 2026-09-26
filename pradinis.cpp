@@ -24,6 +24,7 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
 void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
 void spartos_analize();
 void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai, std::vector<studentas>& kietiakai);
+void studentu_isvedimas(const std::string& failo_pavadinimas, const std::vector<studentas>& grupe);
 
 int main()
 {
@@ -288,7 +289,7 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
         {
             break;
         }
-        std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti.\n";
+        std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti\n";
         failas.clear();
     }
     std::string eilute;
@@ -352,26 +353,26 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
 
 void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis)
 {
-    std::ofstream outputas(failo_pavadinimas);
-    if (!outputas.is_open()) {
+    std::ofstream failas(failo_pavadinimas);
+    if (!failas.is_open()) {
         std::cerr << "Klaida kuriant faila: " << failo_pavadinimas << "\n";
         return;
     }
     std::mt19937 rng(1337);
     std::uniform_int_distribution<int> pazDist(1, 10);
-    outputas << "Vardas Pavarde ";
+    failas << "Vardas Pavarde ";
     for (int j = 1; j <= nd_kiekis; ++j) {
-        outputas << "ND" << j << " ";
+        failas << "ND" << j << " ";
     }
-    outputas << "Egz.\n";
+    failas << "Egz.\n";
     for (size_t i = 1; i <= studentu_skaicius; ++i) {
-        outputas << "Vardas" << i << " " << "Pavarde" << i << " ";
+        failas << "Vardas" << i << " " << "Pavarde" << i << " ";
         for (int j = 0; j < nd_kiekis; ++j) {
-            outputas << pazDist(rng) << " ";
+            failas << pazDist(rng) << " ";
         }
-        outputas << pazDist(rng) << "\n";
+        failas << pazDist(rng) << "\n";
     }
-    outputas.close();
+    failas.close();
 }
 
 void spartos_analize() {
@@ -407,4 +408,21 @@ void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studen
             kietiakai.push_back(B);
         }
     }
+}
+
+void studentu_isvedimas(const std::string& failo_pavadinimas, const std::vector<studentas>& grupe)
+{
+    std::ofstream outputas(failo_pavadinimas);
+    if (!outputas.is_open())
+    {
+        std::cerr << "Klaida: nepavyko atidaryti failo " << failo_pavadinimas << " rasymui\n";
+        return;
+    }
+    outputas << std::left << std::setw(13) << "Vardas" << std::left << std::setw(15) << "Pavarde" << std::left << std::setw(20) << "Galutinis (Vid.)" << std::left << std::setw(20) << "Galutinis (Med.)" << "\n";
+    outputas << std::string(68, '-') << "\n";
+    for (const studentas&A : grupe)
+    {
+        outputas << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << "\n";
+    }
+    outputas.close();
 }
