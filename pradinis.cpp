@@ -22,7 +22,8 @@ struct studentas
 void printas(studentas &A, int pasirinkimas);
 void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinimas);
 void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
-void generavimo_testavimas();
+void spartos_analize();
+void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai, std::vector<studentas>& kietiakai);
 
 int main()
 {
@@ -35,7 +36,7 @@ int main()
     std::cin >> atsakymas1;
     if (atsakymas1 == "t")
     {
-        generavimo_testavimas();
+        spartos_analize();
     }
     else if (atsakymas1 == "n")
     {
@@ -373,18 +374,37 @@ void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_ska
     outputas.close();
 }
 
-void generavimo_testavimas() {
+void spartos_analize() {
     std::vector<size_t> dydziai = {1000, 10000, 100000, 1000000, 10000000};
     std::mt19937 rng(42);
     std::uniform_int_distribution<int> ndDist(7, 20);
     for (size_t dydis : dydziai) {
         std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
+        std::vector<studentas> grupe;
+        std::vector<studentas> vargsiukai;
+        std::vector<studentas> kietiakai;
         int nd_kiekis = ndDist(rng);
         auto pradzia = std::chrono::high_resolution_clock::now();
         failu_generavimas(failo_pavadinimas, dydis, nd_kiekis);
+        studentu_rusiavimas(grupe, vargsiukai, kietiakai);
         auto pabaiga = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> trukme = pabaiga - pradzia;
         std::cout << dydis << " irasu failo (" << nd_kiekis 
                   << " ND) sukurimo laikas: " << trukme.count() << "\n";
+    }
+}
+
+void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai, std::vector<studentas>& kietiakai)
+{
+    for (const studentas&B : grupe)
+    {
+        if (B.galutinisVid < 5.0 || B.galutinisMed < 5.0)
+        {
+            vargsiukai.push_back(B);
+        }
+        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
+        {
+            kietiakai.push_back(B);
+        }
     }
 }
