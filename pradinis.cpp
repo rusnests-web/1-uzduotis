@@ -20,11 +20,16 @@ struct studentas
 };
 
 void printas(studentas &A, int pasirinkimas);
-void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinimas);
-void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
+void failo_skaitymas(studentas &grupe, string &failo_pavadinimas);
+void failu_generavimas(const string &failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
 void spartos_analize();
-void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai, std::vector<studentas>& kietiakai);
-void studentu_isvedimas(const std::string& failo_pavadinimas, const std::vector<studentas>& grupe);
+void studentu_rusiavimas(const studentas &grupe, studentas &vargsiukai, studentas &kietiakai);
+void studentu_isvedimas(const string &failo_pavadinimas, const studentas &grupe);
+void isvedimo_rusiavimas(studentas &grupe, int pasirinkimas);
+bool pagal_varda(const studentas &A, const studentas &B);
+bool pagal_pavarde(const studentas &A, const studentas &B);
+bool pagal_galutinisVid(const studentas &A, const studentas &B);
+bool pagal_galutinisMed(const studentas &A, const studentas &B);
 
 int main()
 {
@@ -277,7 +282,7 @@ void printas(studentas &A, int pasirinkimas)
     }
 }
 
-void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinimas)
+void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas)
 {
     std::ifstream failas(failo_pavadinimas);
     while (true) 
@@ -351,7 +356,7 @@ void failo_skaitymas(std::vector<studentas> &grupe, std::string &failo_pavadinim
     failas.close();
 }
 
-void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis)
+void failu_generavimas(const string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis)
 {
     std::ofstream failas(failo_pavadinimas);
     if (!failas.is_open()) {
@@ -375,27 +380,46 @@ void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_ska
     failas.close();
 }
 
-void spartos_analize() {
+void spartos_analize()
+{
     std::vector<size_t> dydziai = {1000, 10000, 100000, 1000000, 10000000};
     std::mt19937 rng(42);
     std::uniform_int_distribution<int> ndDist(7, 20);
     for (size_t dydis : dydziai) {
         std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
-        std::vector<studentas> grupe;
-        std::vector<studentas> vargsiukai;
-        std::vector<studentas> kietiakai;
+        std::ifstream tikrinimas(failo_pavadinimas);
+        if (tikrinimas.good())
+        {
+            std::cout << "Failas " << failo_pavadinimas << " jau egzistuoja.\n";
+            continue;
+        }
+        tikrinimas.close();
         int nd_kiekis = ndDist(rng);
         auto pradzia = std::chrono::high_resolution_clock::now();
         failu_generavimas(failo_pavadinimas, dydis, nd_kiekis);
-        studentu_rusiavimas(grupe, vargsiukai, kietiakai);
         auto pabaiga = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> trukme = pabaiga - pradzia;
-        std::cout << dydis << " irasu failo (" << nd_kiekis 
-                  << " ND) sukurimo laikas: " << trukme.count() << "\n";
+        //sutvarkyti likusius matavimus
+        std::vector<studentas> grupe;
+        std::vector<studentas> vargsiukai;
+        std::vector<studentas> kietiakai;
+        studentu_rusiavimas(grupe, vargsiukai, kietiakai);
+        std::cout << dydis << " irasu failo (" << nd_kiekis << " ND) sukurimo laikas: " << trukme.count() << "\n";
+    }
+    int pasirinkimas = 1;
+    std::cout << "Pasirinkite isvedimo failu duomenu rikiavimo parametra: \n";
+    std::cout << "1. Pagal varda (iveskite 1); \n";
+    std::cout << "2. Pagal pavarde (iveskite 2); \n";
+    std::cout << "3. Pagal galutini (Vid.) (iveskite 3); \n";
+    std::cout << "4. pagal galutini (Med.) (iveskite 4): \n";
+    std::cin >> pasirinkimas;
+    if (pasirinkimas < 1 || pasirinkimas > 4)
+    {
+        pasirinkimas = 1;
     }
 }
 
-void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai, std::vector<studentas>& kietiakai)
+void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studentas> &vargsiukai, std::vector<studentas> &kietiakai)
 {
     for (const studentas&B : grupe)
     {
@@ -410,7 +434,7 @@ void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studen
     }
 }
 
-void studentu_isvedimas(const std::string& failo_pavadinimas, const std::vector<studentas>& grupe)
+void studentu_isvedimas(const string &failo_pavadinimas, const std::vector<studentas> &grupe)
 {
     std::ofstream outputas(failo_pavadinimas);
     if (!outputas.is_open())
@@ -425,4 +449,36 @@ void studentu_isvedimas(const std::string& failo_pavadinimas, const std::vector<
         outputas << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << "\n";
     }
     outputas.close();
+}
+
+bool pagal_varda(const studentas &A, const studentas &B) {
+    if (A.vardas != B.vardas) return A.vardas < B.vardas;
+    return A.pavarde < B.pavarde;
+}
+bool pagal_pavarde(const studentas &A, const studentas &B) {
+    if (A.pavarde != B.pavarde) return A.pavarde < B.pavarde;
+    return A.vardas < B.vardas;
+}
+bool pagal_galutinisVid(const studentas &A, const studentas &B)
+{
+    return A.galutinisVid < B.galutinisVid;
+}
+bool pagal_galutinisMed(const studentas &A, const studentas &B)
+{
+    return A.galutinisMed < B.galutinisMed;
+}
+
+void isvedimo_rusiavimas(std::vector<studentas> &grupe, int pasirinkimas) {
+    if (pasirinkimas == 1) {
+        std::sort(grupe.begin(), grupe.end(), pagal_varda);
+    } 
+    else if (pasirinkimas == 2) {
+        std::sort(grupe.begin(), grupe.end(), pagal_pavarde);
+    } 
+    else if (pasirinkimas == 3) {
+        std::sort(grupe.begin(), grupe.end(), pagal_galutinisVid);
+    } 
+    else if (pasirinkimas == 4) {
+        std::sort(grupe.begin(), grupe.end(), pagal_galutinisMed);
+    }
 }
