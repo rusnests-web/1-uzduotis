@@ -398,13 +398,8 @@ void spartos_analize()
         auto pradzia = std::chrono::high_resolution_clock::now();
         failu_generavimas(failo_pavadinimas, dydis, nd_kiekis);
         auto pabaiga = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> trukme = pabaiga - pradzia;
-        //sutvarkyti likusius matavimus
-        std::vector<studentas> grupe;
-        std::vector<studentas> vargsiukai;
-        std::vector<studentas> kietiakai;
-        studentu_rusiavimas(grupe, vargsiukai, kietiakai);
-        std::cout << dydis << " irasu failo (" << nd_kiekis << " ND) sukurimo laikas: " << trukme.count() << "\n";
+        std::chrono::duration<double> t_generavimo = pabaiga - pradzia;
+        std::cout << dydis << " irasu failo (" << nd_kiekis << " ND) sukurimo laikas: " << t_generavimo.count() << "\n";
     }
     int pasirinkimas = 1;
     std::cout << "Pasirinkite isvedimo failu duomenu rikiavimo parametra: \n";
@@ -416,6 +411,39 @@ void spartos_analize()
     if (pasirinkimas < 1 || pasirinkimas > 4)
     {
         pasirinkimas = 1;
+    }
+    for (size_t dydis : dydziai) {
+        std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
+        std::vector<studentas> grupe;
+        std::vector<studentas> vargsiukai;
+        std::vector<studentas> kietiakai;
+        auto t1 = std::chrono::high_resolution_clock::now();
+        failo_skaitymas(grupe, failo_pavadinimas);
+        auto t2 = std::chrono::high_resolution_clock::now(); 
+        std::chrono::duration<double> t_skaitymo = t2 - t1;
+        std::cout << dydis << " irasu failo skaitymo laikas: " << t_skaitymo.count() << "\n";
+        auto t3 = std::chrono::high_resolution_clock::now();
+        studentu_rusiavimas(grupe, vargsiukai, kietiakai);
+        auto t4 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> t_dalijimo = t4 - t3;
+        std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas: " << t_dalijimo.count() << "\n";
+        auto t5 = std::chrono::high_resolution_clock::now();
+        isvedimo_rusiavimas(grupe, pasirinkimas);
+        auto t6 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> t_rusiavimo = t6 - t5;
+        std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas: " << t_rusiavimo.count() << "\n";
+        auto t7 = std::chrono::high_resolution_clock::now();
+        studentu_isvedimas(failo_pavadinimas, vargsiukai);
+        auto t8 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> t_vargsiuku = t8 - t7;
+        std::cout << dydis << " irasu vargsiuku isvedimo laikas: " << t_vargsiuku.count() << "\n";
+        auto t9 = std::chrono::high_resolution_clock::now();
+        studentu_isvedimas(failo_pavadinimas, kietiakai);
+        auto t10 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> t_kietiaku = t10 - t9;
+        std::cout << dydis << " irasu kietiaku isvedimo laikas: " << t_kietiaku.count() << "\n";
+        std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
+        std::cout << dydis << " irasu testo laikas: " << is_viso.count() << "\n";
     }
 }
 
