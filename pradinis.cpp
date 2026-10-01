@@ -20,12 +20,12 @@ struct studentas
 };
 
 void printas(studentas &A, int pasirinkimas);
-void failo_skaitymas(studentas &grupe, string &failo_pavadinimas);
-void failu_generavimas(const string &failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
+void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas);
+void failu_generavimas(const string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
 void spartos_analize();
-void studentu_rusiavimas(const studentas &grupe, studentas &vargsiukai, studentas &kietiakai);
-void studentu_isvedimas(const string &failo_pavadinimas, const studentas &grupe);
-void isvedimo_rusiavimas(studentas &grupe, int pasirinkimas);
+void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studentas> &vargsiukai, std::vector<studentas> &kietiakai);
+void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe);
+void isvedimo_rusiavimas(std::vector<studentas> &grupe, int pasirinkimas);
 bool pagal_varda(const studentas &A, const studentas &B);
 bool pagal_pavarde(const studentas &A, const studentas &B);
 bool pagal_galutinisVid(const studentas &A, const studentas &B);
@@ -43,6 +43,7 @@ int main()
     if (atsakymas1 == "t")
     {
         spartos_analize();
+        return 0;
     }
     else if (atsakymas1 == "n")
     {
@@ -284,18 +285,24 @@ void printas(studentas &A, int pasirinkimas)
 
 void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas)
 {
-    std::ifstream failas(failo_pavadinimas);
-    while (true) 
+    std::ifstream failas;
+    while (!failas.is_open())
     {
-        std::cout << "Iveskite failo pavadinima: ";
-        std::cin >> failo_pavadinimas;
-        failas.open(failo_pavadinimas);
-        if (failas.is_open()) 
+        if (failo_pavadinimas.empty())
         {
-            break;
+            std::cout << "Iveskite failo pavadinima: ";
+            if (!(std::cin >> failo_pavadinimas))
+            {
+                throw std::runtime_error("Klaida: nepavyko nuskaityti failo pavadinimo");
+            }
         }
-        std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti\n";
         failas.clear();
+        failas.open(failo_pavadinimas);
+        if (!failas.is_open())
+        {
+            std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti\n";
+            failo_pavadinimas.clear();
+        }
     }
     std::string eilute;
     if (std::getline(failas, eilute))
@@ -363,7 +370,8 @@ void failu_generavimas(const string& failo_pavadinimas, size_t studentu_skaicius
         std::cerr << "Klaida kuriant faila: " << failo_pavadinimas << "\n";
         return;
     }
-    std::mt19937 rng(1337);
+    std::random_device seed;
+    std::mt19937 rng(seed());
     std::uniform_int_distribution<int> pazDist(1, 10);
     failas << "Vardas Pavarde ";
     for (int j = 1; j <= nd_kiekis; ++j) {
@@ -383,30 +391,34 @@ void failu_generavimas(const string& failo_pavadinimas, size_t studentu_skaicius
 void spartos_analize()
 {
     std::vector<size_t> dydziai = {1000, 10000, 100000, 1000000, 10000000};
-    std::mt19937 rng(42);
+    std::random_device seed;
+    std::mt19937 rng(seed());
     std::uniform_int_distribution<int> ndDist(7, 20);
     for (size_t dydis : dydziai) {
         std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
-        std::ifstream tikrinimas(failo_pavadinimas);
-        if (tikrinimas.good())
+        std::ifstream dabartinis_failas(failo_pavadinimas);
+        bool failas_egzistuoja = dabartinis_failas.is_open();
+        dabartinis_failas.close();
+        if (failas_egzistuoja)
         {
-            std::cout << "Failas " << failo_pavadinimas << " jau egzistuoja.\n";
-            continue;
+            std::cout << "Failas " << failo_pavadinimas << " jau egzistuoja; naudojamas esamas failas.\n";
         }
-        tikrinimas.close();
-        int nd_kiekis = ndDist(rng);
-        auto pradzia = std::chrono::high_resolution_clock::now();
-        failu_generavimas(failo_pavadinimas, dydis, nd_kiekis);
-        auto pabaiga = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> t_generavimo = pabaiga - pradzia;
-        std::cout << dydis << " irasu failo (" << nd_kiekis << " ND) sukurimo laikas: " << t_generavimo.count() << "\n";
+        else
+        {
+            int nd_kiekis = ndDist(rng);
+            auto pradzia = std::chrono::high_resolution_clock::now();
+            failu_generavimas(failo_pavadinimas, dydis, nd_kiekis);
+            auto pabaiga = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_generavimo = pabaiga - pradzia;
+            std::cout << dydis << " irasu failo (" << nd_kiekis << " ND) sukurimo laikas: " << std::fixed << std::setprecision(6) << t_generavimo.count() << "\n";
+        }
     }
     int pasirinkimas = 1;
     std::cout << "Pasirinkite isvedimo failu duomenu rikiavimo parametra: \n";
     std::cout << "1. Pagal varda (iveskite 1); \n";
     std::cout << "2. Pagal pavarde (iveskite 2); \n";
     std::cout << "3. Pagal galutini (Vid.) (iveskite 3); \n";
-    std::cout << "4. pagal galutini (Med.) (iveskite 4): \n";
+    std::cout << "4. pagal galutini (Med.) (iveskite 4): ";
     std::cin >> pasirinkimas;
     if (pasirinkimas < 1 || pasirinkimas > 4)
     {
@@ -417,33 +429,36 @@ void spartos_analize()
         std::vector<studentas> grupe;
         std::vector<studentas> vargsiukai;
         std::vector<studentas> kietiakai;
+        std::string varg = "vargsiukai_" + std::to_string(dydis) + ".txt";
+        std::string kiet = "kietiakai_" + std::to_string(dydis) + ".txt";
         auto t1 = std::chrono::high_resolution_clock::now();
         failo_skaitymas(grupe, failo_pavadinimas);
         auto t2 = std::chrono::high_resolution_clock::now(); 
         std::chrono::duration<double> t_skaitymo = t2 - t1;
-        std::cout << dydis << " irasu failo skaitymo laikas: " << t_skaitymo.count() << "\n";
+        std::cout << dydis << " irasu failo skaitymo laikas: " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
         auto t3 = std::chrono::high_resolution_clock::now();
         studentu_rusiavimas(grupe, vargsiukai, kietiakai);
         auto t4 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> t_dalijimo = t4 - t3;
-        std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas: " << t_dalijimo.count() << "\n";
+        std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas: " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
         auto t5 = std::chrono::high_resolution_clock::now();
-        isvedimo_rusiavimas(grupe, pasirinkimas);
+        isvedimo_rusiavimas(vargsiukai, pasirinkimas);
+        isvedimo_rusiavimas(kietiakai, pasirinkimas);
         auto t6 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> t_rusiavimo = t6 - t5;
-        std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas: " << t_rusiavimo.count() << "\n";
+        std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas: " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
         auto t7 = std::chrono::high_resolution_clock::now();
-        studentu_isvedimas(failo_pavadinimas, vargsiukai);
+        studentu_isvedimas(varg, vargsiukai);
         auto t8 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> t_vargsiuku = t8 - t7;
-        std::cout << dydis << " irasu vargsiuku isvedimo laikas: " << t_vargsiuku.count() << "\n";
+        std::cout << dydis << " irasu vargsiuku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
         auto t9 = std::chrono::high_resolution_clock::now();
-        studentu_isvedimas(failo_pavadinimas, kietiakai);
+        studentu_isvedimas(kiet, kietiakai);
         auto t10 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> t_kietiaku = t10 - t9;
-        std::cout << dydis << " irasu kietiaku isvedimo laikas: " << t_kietiaku.count() << "\n";
+        std::cout << dydis << " irasu kietiaku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
         std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
-        std::cout << dydis << " irasu testo laikas: " << is_viso.count() << "\n";
+        std::cout << dydis << " irasu testo laikas: " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
     }
 }
 
@@ -451,23 +466,23 @@ void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studen
 {
     for (const studentas&B : grupe)
     {
-        if (B.galutinisVid < 5.0 || B.galutinisMed < 5.0)
+        if (B.galutinisVid < 5.0 && B.galutinisMed < 5.0)
         {
             vargsiukai.push_back(B);
         }
-        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
+        else if (B.galutinisVid >= 5.0 && B.galutinisMed >= 5.0)
         {
             kietiakai.push_back(B);
         }
     }
 }
 
-void studentu_isvedimas(const string &failo_pavadinimas, const std::vector<studentas> &grupe)
+void studentu_isvedimas(const string &failoPavadinimas, const std::vector<studentas> &grupe)
 {
-    std::ofstream outputas(failo_pavadinimas);
+    std::ofstream outputas(failoPavadinimas);
     if (!outputas.is_open())
     {
-        std::cerr << "Klaida: nepavyko atidaryti failo " << failo_pavadinimas << " rasymui\n";
+        std::cerr << "Klaida: nepavyko atidaryti failo " << failoPavadinimas << " rasymui\n";
         return;
     }
     outputas << std::left << std::setw(13) << "Vardas" << std::left << std::setw(15) << "Pavarde" << std::left << std::setw(20) << "Galutinis (Vid.)" << std::left << std::setw(20) << "Galutinis (Med.)" << "\n";
