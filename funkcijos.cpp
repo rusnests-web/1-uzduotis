@@ -52,44 +52,63 @@ void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas)
             failo_pavadinimas.clear();
         }
     }
+    std::stringstream my_buffer;
+    my_buffer << failas.rdbuf();
+    failas.close();
+
+    std::vector<std::string> splitted;
     std::string eilute;
-    if (std::getline(failas, eilute))
+    while (my_buffer)
+    {
+        if (!my_buffer.eof())
+        {
+            std::getline(my_buffer, eilute);
+            splitted.push_back(eilute);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    std::string outputas;
+    for (size_t i = 0; i < splitted.size(); i++)
+    {
+        (splitted[i].compare(*splitted.rbegin()) != 0 || i + 1 < splitted.size())
+            ? outputas += splitted[i] + "\n"
+            : outputas += splitted[i];
+    }
+
+    std::stringstream duomenu_srautas(outputas);
+    if (std::getline(duomenu_srautas, eilute))
     {
         int nd_kiekis = 0;
-        int eil_ilgis = eilute.length();
-        studentas A;
-        std::string zodis = "";
-        for (int i = 0; i <= eil_ilgis; i++)
+        std::string zodis;
+        std::istringstream antraste(eilute);
+        while (antraste >> zodis)
         {
-            if (i < eil_ilgis && eilute[i] != ' ' && eilute[i] != '\t' && eilute[i] != '\r' && eilute[i] != '\n')
+            if (zodis.size() > 2 && zodis[0] == 'N' && zodis[1] == 'D')
             {
-                zodis += eilute[i];
-            }
-            else if (!zodis.empty())
-            {
-                int zod_ilgis = zodis.length();
-                if (zod_ilgis > 2 && (zodis[0] == 'N' && zodis[1] == 'D'))
-                {
-                    nd_kiekis++;
-                }
-                zodis = "";
+                nd_kiekis++;
             }
         }
-        while (failas >> A.vardas >> A.pavarde)
+
+        studentas A;
+        while (duomenu_srautas >> A.vardas >> A.pavarde)
         {
             A.nd.clear();
             A.suma = 0;
             for (int i = 0; i < nd_kiekis; i++)
             {
                 int paz;
-                if (!(failas >> paz)) 
+                if (!(duomenu_srautas >> paz))
                 {
                     throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
                 }
                 A.nd.push_back(paz);
                 A.suma += paz;
             }
-            if (!(failas >> A.egz))
+            if (!(duomenu_srautas >> A.egz))
             {
                 throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
             }
@@ -103,12 +122,12 @@ void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas)
                 else
                     A.mediana = A.nd[k / 2];
             }
-                A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
-                A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
-                grupe.push_back(A);
+            A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+            A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+            grupe.push_back(A);
+            A = studentas{};
         }
-    }   
-    failas.close();
+    }
 }
 
 void failu_generavimas(const string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis)
@@ -214,11 +233,11 @@ void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studen
 {
     for (const studentas&B : grupe)
     {
-        if (B.galutinisVid < 5.0 && B.galutinisMed < 5.0)
+        if (B.galutinisVid < 5.0 || B.galutinisMed < 5.0)
         {
             vargsiukai.push_back(B);
         }
-        else if (B.galutinisVid >= 5.0 && B.galutinisMed >= 5.0)
+        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
         {
             kietiakai.push_back(B);
         }
