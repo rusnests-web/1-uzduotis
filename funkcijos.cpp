@@ -11,9 +11,11 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <list>
 
 using std::string;
 using std::vector;
+using std::list;
 
 void printas(studentas &A, int pasirinkimas)
 {
@@ -32,6 +34,105 @@ void printas(studentas &A, int pasirinkimas)
 }
 
 void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas)
+{
+    std::ifstream failas;
+    while (!failas.is_open())
+    {
+        if (failo_pavadinimas.empty())
+        {
+            std::cout << "Iveskite failo pavadinima: ";
+            if (!(std::cin >> failo_pavadinimas))
+            {
+                throw std::runtime_error("Klaida: nepavyko nuskaityti failo pavadinimo");
+            }
+        }
+        failas.clear();
+        failas.open(failo_pavadinimas);
+        if (!failas.is_open())
+        {
+            std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti\n";
+            failo_pavadinimas.clear();
+        }
+    }
+    std::stringstream my_buffer;
+    my_buffer << failas.rdbuf();
+    failas.close();
+
+    std::vector<std::string> splitted;
+    std::string eilute;
+    while (my_buffer)
+    {
+        if (!my_buffer.eof())
+        {
+            std::getline(my_buffer, eilute);
+            splitted.push_back(eilute);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    std::string outputas;
+    for (size_t i = 0; i < splitted.size(); i++)
+    {
+        (splitted[i].compare(*splitted.rbegin()) != 0 || i + 1 < splitted.size())
+            ? outputas += splitted[i] + "\n"
+            : outputas += splitted[i];
+    }
+
+    std::stringstream duomenu_srautas(outputas);
+    if (std::getline(duomenu_srautas, eilute))
+    {
+        int nd_kiekis = 0;
+        std::string zodis;
+        std::istringstream antraste(eilute);
+        while (antraste >> zodis)
+        {
+            if (zodis.size() > 2 && zodis[0] == 'N' && zodis[1] == 'D')
+            {
+                nd_kiekis++;
+            }
+        }
+
+        studentas A;
+        while (duomenu_srautas >> A.vardas >> A.pavarde)
+        {
+            A.nd.clear();
+            A.suma = 0;
+            for (int i = 0; i < nd_kiekis; i++)
+            {
+                int paz;
+                if (!(duomenu_srautas >> paz))
+                {
+                    throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
+                }
+                A.nd.push_back(paz);
+                A.suma += paz;
+            }
+            if (!(duomenu_srautas >> A.egz))
+            {
+                throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
+            }
+            int k = A.nd.size();
+            if (k > 0)
+            {
+                A.vidurkis = A.suma / k;
+                std::sort(A.nd.begin(), A.nd.end());
+                if (k % 2 == 0)
+                    A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+                else
+                    A.mediana = A.nd[k / 2];
+            }
+            A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+            A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+            grupe.push_back(A);
+            A = studentas{};
+        }
+    }
+}
+
+void failo_skaitymas(std::list<studentas> &grupe, std::string &failo_pavadinimas)
 {
     std::ifstream failas;
     while (!failas.is_open())
