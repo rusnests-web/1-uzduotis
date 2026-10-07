@@ -377,6 +377,23 @@ void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<s
     outputas.close();
 }
 
+void studentu_isvedimas(const std::string &failoPavadinimas, const std::list<studentas> &grupe)
+{
+    std::ofstream outputas(failoPavadinimas);
+    if (!outputas.is_open())
+    {
+        std::cerr << "Klaida: nepavyko atidaryti failo " << failoPavadinimas << " rasymui\n";
+        return;
+    }
+    outputas << std::left << std::setw(13) << "Vardas" << std::left << std::setw(15) << "Pavarde" << std::left << std::setw(20) << "Galutinis (Vid.)" << std::left << std::setw(20) << "Galutinis (Med.)" << "\n";
+    outputas << std::string(68, '-') << "\n";
+    for (const studentas&A : grupe)
+    {
+        outputas << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << "\n";
+    }
+    outputas.close();
+}
+
 void isvedimo_rusiavimas(std::vector<studentas> &grupe, int pasirinkimas) {
     if (pasirinkimas == 1) {
         std::sort(grupe.begin(), grupe.end(), pagal_varda);
