@@ -392,6 +392,21 @@ void isvedimo_rusiavimas(std::vector<studentas> &grupe, int pasirinkimas) {
     }
 }
 
+void isvedimo_rusiavimas(std::list<studentas> &grupe, int pasirinkimas) {
+    if (pasirinkimas == 1) {
+        std::sort(grupe.begin(), grupe.end(), pagal_varda);
+    } 
+    else if (pasirinkimas == 2) {
+        std::sort(grupe.begin(), grupe.end(), pagal_pavarde);
+    } 
+    else if (pasirinkimas == 3) {
+        std::sort(grupe.begin(), grupe.end(), pagal_galutinisVid);
+    } 
+    else if (pasirinkimas == 4) {
+        std::sort(grupe.begin(), grupe.end(), pagal_galutinisMed);
+    }
+}
+
 bool pagal_varda(const studentas &A, const studentas &B) {
     if (A.vardas != B.vardas) return A.vardas < B.vardas;
     return A.pavarde < B.pavarde;
