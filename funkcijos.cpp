@@ -345,6 +345,21 @@ void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studen
     }
 }
 
+void studentu_rusiavimas(const std::list<studentas> &grupe, std::list<studentas> &vargsiukai, std::list<studentas> &kietiakai)
+{
+    for (const studentas&B : grupe)
+    {
+        if (B.galutinisVid < 5.0 || B.galutinisMed < 5.0)
+        {
+            vargsiukai.push_back(B);
+        }
+        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
+        {
+            kietiakai.push_back(B);
+        }
+    }
+}
+
 void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe)
 {
     std::ofstream outputas(failoPavadinimas);
