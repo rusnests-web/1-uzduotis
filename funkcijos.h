@@ -4,6 +4,7 @@
 #include "studentas.h"
 #include <string>
 #include <vector>
+#include <list>
 
 void printas(studentas &A, int pasirinkimas);
 void failo_skaitymas(std::vector<studentas>& grupe, std::string& failo_pavadinimas);

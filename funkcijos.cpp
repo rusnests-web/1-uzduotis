@@ -21,15 +21,15 @@ void printas(studentas &A, int pasirinkimas)
 {
     if (pasirinkimas == 1)
     {
-        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << "\n";
+        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << &A << "\n";
     }
     else if (pasirinkimas == 2)
     {
-        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisMed << "\n";
+        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisMed << std::left << std::setw(20) << &A << "\n";
     }
     else if (pasirinkimas == 3)
     {
-        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << "\n";
+        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << std::left << std::setw(20) << &A << "\n";
     }
 }
 
@@ -449,16 +449,16 @@ void isvedimo_rusiavimas(std::vector<studentas> &grupe, int pasirinkimas) {
 
 void isvedimo_rusiavimas(std::list<studentas> &grupe, int pasirinkimas) {
     if (pasirinkimas == 1) {
-        std::sort(grupe.begin(), grupe.end(), pagal_varda);
+        grupe.sort(pagal_varda);
     } 
     else if (pasirinkimas == 2) {
-        std::sort(grupe.begin(), grupe.end(), pagal_pavarde);
+        grupe.sort(pagal_pavarde);
     } 
     else if (pasirinkimas == 3) {
-        std::sort(grupe.begin(), grupe.end(), pagal_galutinisVid);
+        grupe.sort(pagal_galutinisVid);
     } 
     else if (pasirinkimas == 4) {
-        std::sort(grupe.begin(), grupe.end(), pagal_galutinisMed);
+        grupe.sort(pagal_galutinisMed);
     }
 }
 
