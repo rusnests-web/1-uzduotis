@@ -8,21 +8,28 @@ Programa atsitiktinai generuoja penkis tekstinius studentu sarasu failus is atit
 
 |Failas|Laikas (s)|
 |------|----------|
-|1000 irasu (10 ND)|0.026312|
-|10000 irasu (12 ND)|0.181505|
-|100000 irasu (16 ND)|1.136747|
-|1000000 irasu (17 ND)|11.232730|
-|10000000 irasu (9 ND)|68.510706|
+|1000 irasu (10 ND)|0.016536|
+|10000 irasu (7 ND)|0.125006|
+|100000 irasu (10 ND)|0.827061|
+|1000000 irasu (19 ND)|12.645660|
+|10000000 irasu (17 ND)|114.053876|
 ---
 
-### Programos spartos analize:
+## Programos spartos analize
+
+Zemiau pateikiami programos spartos analizes rezultatu ***vidurkiai*** Vector ir List atvejais, apskaiciuoti atlikus tris testus:
+
+### Programos sparta (Vector):
 
 |Failas|Nuskaitymas, s|Studentu dalijimas, s|Rusiavimas didejimo tvarka su sort, s|Vargsiuku isvedimas, s|Kietiaku isvedimas, s|Is viso, s|
 |------|--------------|---------------------|-------------------------------------|----------------------|---------------------|----------|
-|1000 irasu (10 ND)|0.016196|0.001511|0.001901|0.007422|0.006374|0.033404|
-|10000 irasu (12 ND)|0.189315|0.014462|0.017993|0.041369|0.100758|0.363897|
-|100000 irasu (16 ND)|1.477374|0.060930|0.085725|0.118127|0.194705|1.936861|
-|1000000 irasu (17 ND)|11.523682|0.611187|0.913147|1.286063|1.748179|16.082258|
-|10000000 irasu (9 ND)|74.681584|6.426020|8.248470|11.587636|17.188267|118.131977|
+|1000 irasu (10 ND)|0.038347|0.001592|0.002195|0.004756|0.00633|0.05322|
+|10000 irasu (7 ND)|0.238906|0.016107|0.017993|0.041369|0.100758|0.363897|
+|100000 irasu (10 ND)|1.477374|0.060930|0.085725|0.118127|0.194705|1.936861|
+|1000000 irasu (19 ND)|11.523682|0.611187|0.913147|1.286063|1.748179|16.082258|
+|10000000 irasu (17 ND)|74.681584|6.426020|8.248470|11.587636|17.188267|118.131977|
 ---
 Visais atvejais sparciausiai vykdoma studentu dalijimo funkcija, o leciausiai - nuskaitymas.
+
+### Programos sparta (List):
+
