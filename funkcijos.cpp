@@ -11,23 +11,25 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <list>
 
 using std::string;
 using std::vector;
+using std::list;
 
 void printas(studentas &A, int pasirinkimas)
 {
     if (pasirinkimas == 1)
     {
-        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << "\n";
+        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << &A << "\n";
     }
     else if (pasirinkimas == 2)
     {
-        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisMed << "\n";
+        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisMed << std::left << std::setw(20) << &A << "\n";
     }
     else if (pasirinkimas == 3)
     {
-        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << "\n";
+        std::cout << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << std::left << std::setw(20) << &A << "\n";
     }
 }
 
@@ -53,62 +55,150 @@ void failo_skaitymas(std::vector<studentas> &grupe, string &failo_pavadinimas)
         }
     }
     std::string eilute;
-    if (std::getline(failas, eilute))
+    if (!std::getline(failas, eilute))
     {
-        int nd_kiekis = 0;
-        int eil_ilgis = eilute.length();
-        studentas A;
-        std::string zodis = "";
-        for (int i = 0; i <= eil_ilgis; i++)
+        return;
+    }
+
+    int nd_kiekis = 0;
+    std::string zodis;
+    std::istringstream antraste(eilute);
+    while (antraste >> zodis)
+    {
+        if (zodis.size() > 2 && zodis[0] == 'N' && zodis[1] == 'D')
         {
-            if (i < eil_ilgis && eilute[i] != ' ' && eilute[i] != '\t' && eilute[i] != '\r' && eilute[i] != '\n')
+            nd_kiekis++;
+        }
+    }
+
+    while (std::getline(failas, eilute))
+    {
+        std::istringstream eilutes_srautas(eilute);
+        studentas A{};
+        if (!(eilutes_srautas >> A.vardas))
+        {
+            continue;
+        }
+        if (!(eilutes_srautas >> A.pavarde))
+        {
+            throw std::runtime_error("Klaida: netaisyklingi studento duomenys faile");
+        }
+
+        A.nd.reserve(nd_kiekis);
+        A.suma = 0;
+        for (int i = 0; i < nd_kiekis; i++)
+        {
+            int paz;
+            if (!(eilutes_srautas >> paz))
             {
-                zodis += eilute[i];
+                throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
             }
-            else if (!zodis.empty())
+            A.nd.push_back(paz);
+            A.suma += paz;
+        }
+        if (!(eilutes_srautas >> A.egz))
+        {
+            throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
+        }
+
+        int k = A.nd.size();
+        if (k > 0)
+        {
+            A.vidurkis = A.suma / k;
+            std::sort(A.nd.begin(), A.nd.end());
+            if (k % 2 == 0)
+                A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+            else
+                A.mediana = A.nd[k / 2];
+        }
+        A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+        A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+        grupe.push_back(A);
+    }
+}
+
+void failo_skaitymas(std::list<studentas> &grupe, std::string &failo_pavadinimas)
+{
+    std::ifstream failas;
+    while (!failas.is_open())
+    {
+        if (failo_pavadinimas.empty())
+        {
+            std::cout << "Iveskite failo pavadinima: ";
+            if (!(std::cin >> failo_pavadinimas))
             {
-                int zod_ilgis = zodis.length();
-                if (zod_ilgis > 2 && (zodis[0] == 'N' && zodis[1] == 'D'))
-                {
-                    nd_kiekis++;
-                }
-                zodis = "";
+                throw std::runtime_error("Klaida: nepavyko nuskaityti failo pavadinimo");
             }
         }
-        while (failas >> A.vardas >> A.pavarde)
+        failas.clear();
+        failas.open(failo_pavadinimas);
+        if (!failas.is_open())
         {
-            A.nd.clear();
-            A.suma = 0;
-            for (int i = 0; i < nd_kiekis; i++)
-            {
-                int paz;
-                if (!(failas >> paz)) 
-                {
-                    throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
-                }
-                A.nd.push_back(paz);
-                A.suma += paz;
-            }
-            if (!(failas >> A.egz))
-            {
-                throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
-            }
-            int k = A.nd.size();
-            if (k > 0)
-            {
-                A.vidurkis = A.suma / k;
-                std::sort(A.nd.begin(), A.nd.end());
-                if (k % 2 == 0)
-                    A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
-                else
-                    A.mediana = A.nd[k / 2];
-            }
-                A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
-                A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
-                grupe.push_back(A);
+            std::cout << "Klaida: failas '" << failo_pavadinimas << "' nerastas arba jo nepavyko atidaryti\n";
+            failo_pavadinimas.clear();
         }
-    }   
-    failas.close();
+    }
+    std::string eilute;
+    if (!std::getline(failas, eilute))
+    {
+        return;
+    }
+
+    int nd_kiekis = 0;
+    std::string zodis;
+    std::istringstream antraste(eilute);
+    while (antraste >> zodis)
+    {
+        if (zodis.size() > 2 && zodis[0] == 'N' && zodis[1] == 'D')
+        {
+            nd_kiekis++;
+        }
+    }
+
+    while (std::getline(failas, eilute))
+    {
+        std::istringstream eilutes_srautas(eilute);
+        studentas A{};
+        if (!(eilutes_srautas >> A.vardas))
+        {
+            continue;
+        }
+        if (!(eilutes_srautas >> A.pavarde))
+        {
+            throw std::runtime_error("Klaida: netaisyklingi studento duomenys faile");
+        }
+
+        A.nd.reserve(nd_kiekis);
+        A.suma = 0;
+        for (int i = 0; i < nd_kiekis; i++)
+        {
+            int paz;
+            if (!(eilutes_srautas >> paz))
+            {
+                throw std::runtime_error("Klaida: netaisyklingi namu darbu pazymiu duomenys faile");
+            }
+            A.nd.push_back(paz);
+            A.suma += paz;
+        }
+        if (!(eilutes_srautas >> A.egz))
+        {
+            throw std::runtime_error("Klaida: netaisyklingi egzamino pazymio duomenys faile");
+        }
+
+        int k = A.nd.size();
+        if (k > 0)
+        {
+            A.vidurkis = A.suma / k;
+            std::sort(A.nd.begin(), A.nd.end());
+            if (k % 2 == 0)
+                A.mediana = (A.nd[k / 2 - 1] + A.nd[k / 2]) / 2.0;
+            else
+                A.mediana = A.nd[k / 2];
+        }
+        A.galutinisVid = 0.4 * A.vidurkis + 0.6 * A.egz;
+        A.galutinisMed = 0.4 * A.mediana + 0.6 * A.egz;
+        grupe.push_back(A);
+    }
 }
 
 void failu_generavimas(const string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis)
@@ -174,51 +264,104 @@ void spartos_analize()
     }
     for (size_t dydis : dydziai) {
         std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
-        std::vector<studentas> grupe;
-        std::vector<studentas> vargsiukai;
-        std::vector<studentas> kietiakai;
-        std::string varg = "vargsiukai_" + std::to_string(dydis) + ".txt";
-        std::string kiet = "kietiakai_" + std::to_string(dydis) + ".txt";
-        auto t1 = std::chrono::high_resolution_clock::now();
-        failo_skaitymas(grupe, failo_pavadinimas);
-        auto t2 = std::chrono::high_resolution_clock::now(); 
-        std::chrono::duration<double> t_skaitymo = t2 - t1;
-        std::cout << dydis << " irasu failo skaitymo laikas: " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
-        auto t3 = std::chrono::high_resolution_clock::now();
-        studentu_rusiavimas(grupe, vargsiukai, kietiakai);
-        auto t4 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> t_dalijimo = t4 - t3;
-        std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas: " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
-        auto t5 = std::chrono::high_resolution_clock::now();
-        isvedimo_rusiavimas(vargsiukai, pasirinkimas);
-        isvedimo_rusiavimas(kietiakai, pasirinkimas);
-        auto t6 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> t_rusiavimo = t6 - t5;
-        std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas: " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
-        auto t7 = std::chrono::high_resolution_clock::now();
-        studentu_isvedimas(varg, vargsiukai);
-        auto t8 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> t_vargsiuku = t8 - t7;
-        std::cout << dydis << " irasu vargsiuku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
-        auto t9 = std::chrono::high_resolution_clock::now();
-        studentu_isvedimas(kiet, kietiakai);
-        auto t10 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> t_kietiaku = t10 - t9;
-        std::cout << dydis << " irasu kietiaku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
-        std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
-        std::cout << dydis << " irasu testo laikas: " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
+        {
+            std::vector<studentas> grupe;
+            std::vector<studentas> vargsiukai;
+            std::vector<studentas> kietiakai;
+            std::string varg = "vargsiukai_" + std::to_string(dydis) + ".txt";
+            std::string kiet = "kietiakai_" + std::to_string(dydis) + ".txt";
+            auto t1 = std::chrono::high_resolution_clock::now();
+            failo_skaitymas(grupe, failo_pavadinimas);
+            auto t2 = std::chrono::high_resolution_clock::now(); 
+            std::chrono::duration<double> t_skaitymo = t2 - t1;
+            std::cout << dydis << " irasu failo skaitymo laikas: " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
+            auto t3 = std::chrono::high_resolution_clock::now();
+            studentu_rusiavimas(grupe, vargsiukai, kietiakai);
+            auto t4 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_dalijimo = t4 - t3;
+            std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas: " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
+            auto t5 = std::chrono::high_resolution_clock::now();
+            isvedimo_rusiavimas(vargsiukai, pasirinkimas);
+            isvedimo_rusiavimas(kietiakai, pasirinkimas);
+            auto t6 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_rusiavimo = t6 - t5;
+            std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas: " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
+            auto t7 = std::chrono::high_resolution_clock::now();
+            studentu_isvedimas(varg, vargsiukai);
+            auto t8 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_vargsiuku = t8 - t7;
+            std::cout << dydis << " irasu vargsiuku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
+            auto t9 = std::chrono::high_resolution_clock::now();
+            studentu_isvedimas(kiet, kietiakai);
+            auto t10 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_kietiaku = t10 - t9;
+            std::cout << dydis << " irasu kietiaku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
+            std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
+            std::cout << dydis << " irasu testo laikas: " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
+        }
+
+        {
+            std::list<studentas> grupe;
+            std::list<studentas> vargsiukai;
+            std::list<studentas> kietiakai;
+            std::string varg = "vargsiukai_" + std::to_string(dydis) + ".txt";
+            std::string kiet = "kietiakai_" + std::to_string(dydis) + ".txt";
+            auto t1 = std::chrono::high_resolution_clock::now();
+            failo_skaitymas(grupe, failo_pavadinimas);
+            auto t2 = std::chrono::high_resolution_clock::now(); 
+            std::chrono::duration<double> t_skaitymo = t2 - t1;
+            std::cout << dydis << " irasu failo skaitymo laikas (list): " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
+            auto t3 = std::chrono::high_resolution_clock::now();
+            studentu_rusiavimas(grupe, vargsiukai, kietiakai);
+            auto t4 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_dalijimo = t4 - t3;
+            std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas (list): " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
+            auto t5 = std::chrono::high_resolution_clock::now();
+            isvedimo_rusiavimas(vargsiukai, pasirinkimas);
+            isvedimo_rusiavimas(kietiakai, pasirinkimas);
+            auto t6 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_rusiavimo = t6 - t5;
+            std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas (list): " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
+            auto t7 = std::chrono::high_resolution_clock::now();
+            studentu_isvedimas(varg, vargsiukai);
+            auto t8 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_vargsiuku = t8 - t7;
+            std::cout << dydis << " irasu vargsiuku isvedimo laikas (list): " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
+            auto t9 = std::chrono::high_resolution_clock::now();
+            studentu_isvedimas(kiet, kietiakai);
+            auto t10 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> t_kietiaku = t10 - t9;
+            std::cout << dydis << " irasu kietiaku isvedimo laikas (list): " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
+            std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
+            std::cout << dydis << " irasu testo laikas (list): " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
+        }    
     }
 }
 
 void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studentas> &vargsiukai, std::vector<studentas> &kietiakai)
 {
-    for (const studentas&B : grupe)
+    for (const studentas &B : grupe)
     {
-        if (B.galutinisVid < 5.0 && B.galutinisMed < 5.0)
+        if (B.galutinisVid < 5.0 || B.galutinisMed < 5.0)
         {
             vargsiukai.push_back(B);
         }
-        else if (B.galutinisVid >= 5.0 && B.galutinisMed >= 5.0)
+        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
+        {
+            kietiakai.push_back(B);
+        }
+    }
+}
+
+void studentu_rusiavimas(const std::list<studentas> &grupe, std::list<studentas> &vargsiukai, std::list<studentas> &kietiakai)
+{
+    for (const studentas &B : grupe)
+    {
+        if (B.galutinisVid < 5.0 || B.galutinisMed < 5.0)
+        {
+            vargsiukai.push_back(B);
+        }
+        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
         {
             kietiakai.push_back(B);
         }
@@ -226,6 +369,23 @@ void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studen
 }
 
 void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe)
+{
+    std::ofstream outputas(failoPavadinimas);
+    if (!outputas.is_open())
+    {
+        std::cerr << "Klaida: nepavyko atidaryti failo " << failoPavadinimas << " rasymui\n";
+        return;
+    }
+    outputas << std::left << std::setw(13) << "Vardas" << std::left << std::setw(15) << "Pavarde" << std::left << std::setw(20) << "Galutinis (Vid.)" << std::left << std::setw(20) << "Galutinis (Med.)" << "\n";
+    outputas << std::string(68, '-') << "\n";
+    for (const studentas&A : grupe)
+    {
+        outputas << std::left << std::setw(13) << A.vardas << std::left << std::setw(15) << A.pavarde << std::left << std::setw(20) << std::fixed << std::setprecision(2) << A.galutinisVid << std::left << std::setw(20) << A.galutinisMed << "\n";
+    }
+    outputas.close();
+}
+
+void studentu_isvedimas(const std::string &failoPavadinimas, const std::list<studentas> &grupe)
 {
     std::ofstream outputas(failoPavadinimas);
     if (!outputas.is_open())
@@ -254,6 +414,21 @@ void isvedimo_rusiavimas(std::vector<studentas> &grupe, int pasirinkimas) {
     } 
     else if (pasirinkimas == 4) {
         std::sort(grupe.begin(), grupe.end(), pagal_galutinisMed);
+    }
+}
+
+void isvedimo_rusiavimas(std::list<studentas> &grupe, int pasirinkimas) {
+    if (pasirinkimas == 1) {
+        grupe.sort(pagal_varda);
+    } 
+    else if (pasirinkimas == 2) {
+        grupe.sort(pagal_pavarde);
+    } 
+    else if (pasirinkimas == 3) {
+        grupe.sort(pagal_galutinisVid);
+    } 
+    else if (pasirinkimas == 4) {
+        grupe.sort(pagal_galutinisMed);
     }
 }
 
