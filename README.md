@@ -10,6 +10,8 @@
 
 Programa atsitiktinai generuoja penkis tekstinius studentu sarasu failus is atitinkamai 1000, 10000, 100000, 1000000 ir 10000000 irasu. Kiekviena ju sudaro vardo, pavardes stulpeliai ir atsitiktinai parinktas kiekis namu darbu pazymiu stulpeliu (nuo 7 iki 20 imtinai). Namu darbu ir egzamino pazymiai generuojami atsitiktinai nuo 1 iki 10 imtinai.
 
+![Sugeneruoto studentu saraso failo pavyzdys](nuotraukos/stud_sar_pvz.png)
+
 ### Failu kurimo laikas:
 
 |Failas|Laikas (s)|
@@ -22,6 +24,10 @@ Programa atsitiktinai generuoja penkis tekstinius studentu sarasu failus is atit
 ---
 
 ## Programos spartos analize
+
+Spartos analizes testo vykdymo pavyzdys:
+
+![Spartos analizes testo vykdymo pavyzdys](nuotraukos/test_pvz.png)
 
 Zemiau pateikiami programos spartos analizes rezultatu ***vidurkiai*** Vector ir List atvejais, apskaiciuoti atlikus tris testus:
 
