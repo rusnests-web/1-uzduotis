@@ -338,6 +338,75 @@ void spartos_analize()
     }
 }
 
+void strategiju_analize()
+{
+    const std::vector<size_t> dydziai = {1000, 10000, 100000, 1000000, 10000000};
+
+    for (size_t dydis : dydziai)
+    {
+        const std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
+        std::ifstream failas(failo_pavadinimas);
+
+        if (!failas.is_open())
+        {
+            std::cerr << "Klaida: nerastas duomenu failas " << failo_pavadinimas << "\n";
+            return;
+        }
+    }
+
+    for (size_t dydis : dydziai)
+        {
+            const std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
+            std::vector<studentas> vector1;
+            std::vector<studentas> vector1Vargsiukai;
+            std::vector<studentas> vector1Kietiakai;
+            std::string vectorFailas1 = failo_pavadinimas;
+            failo_skaitymas(vector1, vectorFailas1);
+
+            auto pradzia = std::chrono::steady_clock::now();
+            studentu_rusiavimas(vector1, vector1Vargsiukai, vector1Kietiakai);
+            auto pabaiga = std::chrono::steady_clock::now();
+            const std::chrono::duration<double> vector1Laikas = pabaiga - pradzia;
+
+            std::vector<studentas> vector2;
+            std::vector<studentas> vector2Vargsiukai;
+            std::string vectorFailas2 = failo_pavadinimas;
+            failo_skaitymas(vector2, vectorFailas2);
+
+            pradzia = std::chrono::steady_clock::now();
+            studentu_rusiavimas_2strat(vector2, vector2Vargsiukai);
+            pabaiga = std::chrono::steady_clock::now();
+            const std::chrono::duration<double> vector2Laikas = pabaiga - pradzia;
+
+            std::list<studentas> list1;
+            std::list<studentas> list1Vargsiukai;
+            std::list<studentas> list1Kietiakai;
+            std::string listFailas1 = failo_pavadinimas;
+            failo_skaitymas(list1, listFailas1);
+
+            pradzia = std::chrono::steady_clock::now();
+            studentu_rusiavimas(list1, list1Vargsiukai, list1Kietiakai);
+            pabaiga = std::chrono::steady_clock::now();
+            const std::chrono::duration<double> list1Laikas = pabaiga - pradzia;
+
+            std::list<studentas> list2;
+            std::list<studentas> list2Vargsiukai;
+            std::string listFailas2 = failo_pavadinimas;
+            failo_skaitymas(list2, listFailas2);
+
+            pradzia = std::chrono::steady_clock::now();
+            studentu_rusiavimas_2strat(list2, list2Vargsiukai);
+            pabaiga = std::chrono::steady_clock::now();
+            const std::chrono::duration<double> list2Laikas = pabaiga - pradzia;
+
+            std::cout << "\n" << dydis << " studentu skirstymo laikai (sekundemis):\n"
+                    << "1 strategija (vector): " << vector1Laikas.count() << "\n"
+                    << "2 strategija (vector): " << vector2Laikas.count() << "\n"
+                    << "1 strategija (list):   " << list1Laikas.count() << "\n"
+                    << "2 strategija (list):   " << list2Laikas.count() << "\n";
+        }
+}
+
 void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studentas> &vargsiukai, std::vector<studentas> &kietiakai)
 {
     for (const studentas &B : grupe)
@@ -346,7 +415,7 @@ void studentu_rusiavimas(const std::vector<studentas> &grupe, std::vector<studen
         {
             vargsiukai.push_back(B);
         }
-        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
+        else
         {
             kietiakai.push_back(B);
         }
@@ -361,7 +430,7 @@ void studentu_rusiavimas(const std::list<studentas> &grupe, std::list<studentas>
         {
             vargsiukai.push_back(B);
         }
-        else if (B.galutinisVid >= 5.0 || B.galutinisMed >= 5.0)
+        else
         {
             kietiakai.push_back(B);
         }

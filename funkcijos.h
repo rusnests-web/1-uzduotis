@@ -11,6 +11,7 @@ void failo_skaitymas(std::vector<studentas>& grupe, std::string& failo_pavadinim
 void failo_skaitymas(std::list<studentas>& grupe, std::string& failo_pavadinimas);
 void failu_generavimas(const std::string& failo_pavadinimas, size_t studentu_skaicius, size_t nd_kiekis);
 void spartos_analize();
+void strategiju_analize();
 void studentu_rusiavimas(const std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai, std::vector<studentas>& kietiakai);
 void studentu_rusiavimas(const std::list<studentas>& grupe, std::list<studentas>& vargsiukai, std::list<studentas>& kietiakai);
 void studentu_rusiavimas_2strat(std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai);

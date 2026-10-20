@@ -26,9 +26,24 @@ int main()
     }
     if (atsakymas1 == "t")
     {
-        spartos_analize();
-        return 0;
+        int analize;
+        std::cout << "Pasirinkite analize: \n";
+        std::cout << "1. Tik studentu skirstymo strategiju laikai (iveskite 1); \n";
+        std::cout << "2. Visa programos spartos analize (iveskite 2): \n";
+    while (!(std::cin >> analize) || (analize != 1 && analize != 2))
+    {
+        std::cout << "Klaida: neteisinga ivestis, iveskite 1 arba 2: ";
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
     }
+
+    if (analize == 1)
+        strategiju_analize();
+    else
+        spartos_analize();
+    return 0;
+    }
+
     else if (atsakymas1 == "n")
     {
         std::cout << "Ar norite skaityti studentu duomenis is failo? (t / n): ";
