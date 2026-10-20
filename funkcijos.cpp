@@ -368,6 +368,30 @@ void studentu_rusiavimas(const std::list<studentas> &grupe, std::list<studentas>
     }
 }
 
+bool yra_vargsiukas(const studentas& A)
+{
+    return A.galutinisVid < 5.0 || A.galutinisMed < 5.0;
+}
+
+void studentu_rusiavimas_2strat(
+    std::vector<studentas>& grupe,
+    std::vector<studentas>& vargsiukai)
+{
+    vargsiukai.clear();
+
+    for (const studentas& A : grupe)
+    {
+        if (yra_vargsiukas(A))
+        {
+            vargsiukai.push_back(A);
+        }
+    }
+
+    grupe.erase(
+        std::remove_if(grupe.begin(), grupe.end(), yra_vargsiukas),
+        grupe.end());
+}
+
 void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe)
 {
     std::ofstream outputas(failoPavadinimas);
