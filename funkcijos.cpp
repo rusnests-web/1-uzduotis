@@ -392,6 +392,23 @@ void studentu_rusiavimas_2strat(
         grupe.end());
 }
 
+void studentu_rusiavimas_2strat(
+    std::list<studentas>& grupe,
+    std::list<studentas>& vargsiukai)
+{
+    vargsiukai.clear();
+
+    for (const studentas& A : grupe)
+    {
+        if (yra_vargsiukas(A))
+        {
+            vargsiukai.push_back(A);
+        }
+    }
+
+    grupe.remove_if(yra_vargsiukas);
+}
+
 void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe)
 {
     std::ofstream outputas(failoPavadinimas);
