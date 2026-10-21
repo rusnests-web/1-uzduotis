@@ -16,7 +16,7 @@ int main()
     int konteineris = 1;
     std::string failo_pavadinimas;
     studentas A;
-    std::cout << "Ar norite sugeneruoti penkis atsitiktinius studentu sarasu failus? (t / n): ";
+    std::cout << "Ar norite sugeneruoti penkis atsitiktinius studentu sarasu failus arba dirbti su jau sukurtais? (t / n): ";
     std::string atsakymas1;
     std::cin >> atsakymas1;
     while (atsakymas1 != "t" && atsakymas1 != "n")

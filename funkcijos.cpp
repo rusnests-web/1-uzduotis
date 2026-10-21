@@ -399,9 +399,20 @@ void strategiju_analize()
             pabaiga = std::chrono::steady_clock::now();
             const std::chrono::duration<double> list2Laikas = pabaiga - pradzia;
 
+            std::vector<studentas> vector3;
+            std::vector<studentas> vector3Vargsiukai;
+            std::string vectorFailas3 = failo_pavadinimas;
+            failo_skaitymas(vector3, vectorFailas3);
+
+            auto pradzia3 = std::chrono::steady_clock::now();
+            studentu_rusiavimas_3strat(vector3, vector3Vargsiukai);
+            auto pabaiga3 = std::chrono::steady_clock::now();
+            const std::chrono::duration<double> vector3Laikas = pabaiga3 - pradzia3;
+
             std::cout << "\n" << dydis << " studentu skirstymo laikai (sekundemis):\n"
                     << "1 strategija (vector): " << vector1Laikas.count() << "\n"
                     << "2 strategija (vector): " << vector2Laikas.count() << "\n"
+                    << "3 strategija (vector): " << vector3Laikas.count() << "\n"
                     << "1 strategija (list):   " << list1Laikas.count() << "\n"
                     << "2 strategija (list):   " << list2Laikas.count() << "\n";
         }
@@ -476,6 +487,24 @@ void studentu_rusiavimas_2strat(
     }
 
     grupe.remove_if(yra_vargsiukas);
+}
+
+bool yra_kietiakas(const studentas& A)
+{
+    return !yra_vargsiukas(A);
+}
+
+void studentu_rusiavimas_3strat(
+    std::vector<studentas>& grupe,
+    std::vector<studentas>& vargsiukai)
+{
+    vargsiukai.clear();
+
+    auto riba = std::partition(
+        grupe.begin(), grupe.end(), yra_kietiakas);
+
+    vargsiukai.assign(riba, grupe.end());
+    grupe.erase(riba, grupe.end());
 }
 
 void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe)
