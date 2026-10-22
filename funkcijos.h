@@ -17,6 +17,7 @@ void studentu_rusiavimas(const std::list<studentas>& grupe, std::list<studentas>
 void studentu_rusiavimas_2strat(std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai);
 void studentu_rusiavimas_2strat(std::list<studentas>& grupe, std::list<studentas>& vargsiukai);
 void studentu_rusiavimas_3strat(std::vector<studentas>& grupe, std::vector<studentas>& vargsiukai);
+void studentu_rusiavimas_3strat(std::list<studentas>& grupe, std::list<studentas>& vargsiukai);
 bool yra_kietiakas(const studentas& A);
 bool yra_vargsiukas(const studentas& A);
 void studentu_isvedimas(const std::string& failoPavadinimas, const std::vector<studentas>& grupe);

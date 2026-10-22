@@ -507,6 +507,19 @@ void studentu_rusiavimas_3strat(
     grupe.erase(riba, grupe.end());
 }
 
+void studentu_rusiavimas_3strat(
+    std::list<studentas>& grupe,
+    std::list<studentas>& vargsiukai)
+{
+    vargsiukai.clear();
+
+    auto riba = std::partition(
+        grupe.begin(), grupe.end(), yra_kietiakas);
+
+    vargsiukai.assign(riba, grupe.end());
+    grupe.erase(riba, grupe.end());
+}
+
 void studentu_isvedimas(const std::string &failoPavadinimas, const std::vector<studentas> &grupe)
 {
     std::ofstream outputas(failoPavadinimas);
