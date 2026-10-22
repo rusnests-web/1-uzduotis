@@ -409,12 +409,23 @@ void strategiju_analize()
             auto pabaiga3 = std::chrono::steady_clock::now();
             const std::chrono::duration<double> vector3Laikas = pabaiga3 - pradzia3;
 
+            std::list<studentas> list3;
+            std::list<studentas> list3Vargsiukai;
+            std::string listFailas3 = failo_pavadinimas;
+            failo_skaitymas(list3, listFailas3);
+
+            auto pradzia3 = std::chrono::steady_clock::now();
+            studentu_rusiavimas_3strat(list3, list3Vargsiukai);
+            auto pabaiga3 = std::chrono::steady_clock::now();
+            const std::chrono::duration<double> list3Laikas = pabaiga3 - pradzia3;
+
             std::cout << "\n" << dydis << " studentu skirstymo laikai (sekundemis):\n"
                     << "1 strategija (vector): " << vector1Laikas.count() << "\n"
                     << "2 strategija (vector): " << vector2Laikas.count() << "\n"
                     << "3 strategija (vector): " << vector3Laikas.count() << "\n"
                     << "1 strategija (list):   " << list1Laikas.count() << "\n"
-                    << "2 strategija (list):   " << list2Laikas.count() << "\n";
+                    << "2 strategija (list):   " << list2Laikas.count() << "\n"
+                    << "3 strategija (list):   " << list3Laikas.count() << "\n";
         }
 }
 
