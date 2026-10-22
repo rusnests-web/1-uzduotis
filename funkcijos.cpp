@@ -274,30 +274,30 @@ void spartos_analize()
             failo_skaitymas(grupe, failo_pavadinimas);
             auto t2 = std::chrono::high_resolution_clock::now(); 
             std::chrono::duration<double> t_skaitymo = t2 - t1;
-            std::cout << dydis << " irasu failo skaitymo laikas: " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
+            std::cout << dydis << " irasu failo skaitymo laikas (Vector): " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
             auto t3 = std::chrono::high_resolution_clock::now();
             studentu_rusiavimas(grupe, vargsiukai, kietiakai);
             auto t4 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_dalijimo = t4 - t3;
-            std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas: " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
+            std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas (Vector): " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
             auto t5 = std::chrono::high_resolution_clock::now();
             isvedimo_rusiavimas(vargsiukai, pasirinkimas);
             isvedimo_rusiavimas(kietiakai, pasirinkimas);
             auto t6 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_rusiavimo = t6 - t5;
-            std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas: " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
+            std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas (Vector): " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
             auto t7 = std::chrono::high_resolution_clock::now();
             studentu_isvedimas(varg, vargsiukai);
             auto t8 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_vargsiuku = t8 - t7;
-            std::cout << dydis << " irasu vargsiuku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
+            std::cout << dydis << " irasu vargsiuku isvedimo laikas (Vector): " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
             auto t9 = std::chrono::high_resolution_clock::now();
             studentu_isvedimas(kiet, kietiakai);
             auto t10 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_kietiaku = t10 - t9;
-            std::cout << dydis << " irasu kietiaku isvedimo laikas: " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
+            std::cout << dydis << " irasu kietiaku isvedimo laikas (Vector): " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
             std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
-            std::cout << dydis << " irasu testo laikas: " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
+            std::cout << dydis << " irasu testo laikas (Vector): " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
         }
 
         {
@@ -310,30 +310,30 @@ void spartos_analize()
             failo_skaitymas(grupe, failo_pavadinimas);
             auto t2 = std::chrono::high_resolution_clock::now(); 
             std::chrono::duration<double> t_skaitymo = t2 - t1;
-            std::cout << dydis << " irasu failo skaitymo laikas (list): " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
+            std::cout << dydis << " irasu failo skaitymo laikas (List): " << std::fixed << std::setprecision(6) << t_skaitymo.count() << "\n";
             auto t3 = std::chrono::high_resolution_clock::now();
             studentu_rusiavimas(grupe, vargsiukai, kietiakai);
             auto t4 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_dalijimo = t4 - t3;
-            std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas (list): " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
+            std::cout << dydis << " irasu failo dalijimo i dvi grupes laikas (List): " << std::fixed << std::setprecision(6) << t_dalijimo.count() << "\n";
             auto t5 = std::chrono::high_resolution_clock::now();
             isvedimo_rusiavimas(vargsiukai, pasirinkimas);
             isvedimo_rusiavimas(kietiakai, pasirinkimas);
             auto t6 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_rusiavimo = t6 - t5;
-            std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas (list): " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
+            std::cout << dydis << " irasu failo rusiavimo didejimo tvarka su sort funkcija laikas (List): " << std::fixed << std::setprecision(6) << t_rusiavimo.count() << "\n";
             auto t7 = std::chrono::high_resolution_clock::now();
             studentu_isvedimas(varg, vargsiukai);
             auto t8 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_vargsiuku = t8 - t7;
-            std::cout << dydis << " irasu vargsiuku isvedimo laikas (list): " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
+            std::cout << dydis << " irasu vargsiuku isvedimo laikas (List): " << std::fixed << std::setprecision(6) << t_vargsiuku.count() << "\n";
             auto t9 = std::chrono::high_resolution_clock::now();
             studentu_isvedimas(kiet, kietiakai);
             auto t10 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> t_kietiaku = t10 - t9;
-            std::cout << dydis << " irasu kietiaku isvedimo laikas (list): " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
+            std::cout << dydis << " irasu kietiaku isvedimo laikas (List): " << std::fixed << std::setprecision(6) << t_kietiaku.count() << "\n";
             std::chrono::duration<double> is_viso = t_skaitymo + t_dalijimo + t_rusiavimo + t_vargsiuku + t_kietiaku;
-            std::cout << dydis << " irasu testo laikas (list): " << std::fixed << std::setprecision(6) << is_viso.count() << "\n";
+            std::cout << dydis << " irasu testo laikas (List): " << std::fixed << std::setprecision(6) << is_viso.count() << "\n\n";
         }    
     }
 }
@@ -357,75 +357,90 @@ void strategiju_analize()
     for (size_t dydis : dydziai)
         {
             const std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
-            std::vector<studentas> vector1;
-            std::vector<studentas> vector1Vargsiukai;
-            std::vector<studentas> vector1Kietiakai;
-            std::string vectorFailas1 = failo_pavadinimas;
-            failo_skaitymas(vector1, vectorFailas1);
+            std::chrono::duration<double> vector1Laikas, vector2Laikas;
+            std::chrono::duration<double> list1Laikas, list2Laikas;
+            std::chrono::duration<double> vector3Laikas, list3Laikas;
+            {
+                std::vector<studentas> vector1;
+                std::vector<studentas> vector1Vargsiukai;
+                std::vector<studentas> vector1Kietiakai;
+                std::string vectorFailas1 = failo_pavadinimas;
+                failo_skaitymas(vector1, vectorFailas1);
 
-            auto pradzia = std::chrono::steady_clock::now();
-            studentu_rusiavimas(vector1, vector1Vargsiukai, vector1Kietiakai);
-            auto pabaiga = std::chrono::steady_clock::now();
-            const std::chrono::duration<double> vector1Laikas = pabaiga - pradzia;
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas(vector1, vector1Vargsiukai, vector1Kietiakai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                vector1Laikas = pabaiga - pradzia;
+            }
 
-            std::vector<studentas> vector2;
-            std::vector<studentas> vector2Vargsiukai;
-            std::string vectorFailas2 = failo_pavadinimas;
-            failo_skaitymas(vector2, vectorFailas2);
+            {
+                std::vector<studentas> vector2;
+                std::vector<studentas> vector2Vargsiukai;
+                std::string vectorFailas2 = failo_pavadinimas;
+                failo_skaitymas(vector2, vectorFailas2);
 
-            pradzia = std::chrono::steady_clock::now();
-            studentu_rusiavimas_2strat(vector2, vector2Vargsiukai);
-            pabaiga = std::chrono::steady_clock::now();
-            const std::chrono::duration<double> vector2Laikas = pabaiga - pradzia;
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas_2strat(vector2, vector2Vargsiukai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                vector2Laikas = pabaiga - pradzia;
+            }
 
-            std::list<studentas> list1;
-            std::list<studentas> list1Vargsiukai;
-            std::list<studentas> list1Kietiakai;
-            std::string listFailas1 = failo_pavadinimas;
-            failo_skaitymas(list1, listFailas1);
+            {
+                std::list<studentas> list1;
+                std::list<studentas> list1Vargsiukai;
+                std::list<studentas> list1Kietiakai;
+                std::string listFailas1 = failo_pavadinimas;
+                failo_skaitymas(list1, listFailas1);
 
-            pradzia = std::chrono::steady_clock::now();
-            studentu_rusiavimas(list1, list1Vargsiukai, list1Kietiakai);
-            pabaiga = std::chrono::steady_clock::now();
-            const std::chrono::duration<double> list1Laikas = pabaiga - pradzia;
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas(list1, list1Vargsiukai, list1Kietiakai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                list1Laikas = pabaiga - pradzia;
+            }
 
-            std::list<studentas> list2;
-            std::list<studentas> list2Vargsiukai;
-            std::string listFailas2 = failo_pavadinimas;
-            failo_skaitymas(list2, listFailas2);
+            {
+                std::list<studentas> list2;
+                std::list<studentas> list2Vargsiukai;
+                std::string listFailas2 = failo_pavadinimas;
+                failo_skaitymas(list2, listFailas2);
 
-            pradzia = std::chrono::steady_clock::now();
-            studentu_rusiavimas_2strat(list2, list2Vargsiukai);
-            pabaiga = std::chrono::steady_clock::now();
-            const std::chrono::duration<double> list2Laikas = pabaiga - pradzia;
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas_2strat(list2, list2Vargsiukai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                list2Laikas = pabaiga - pradzia;
+            }
 
-            std::vector<studentas> vector3;
-            std::vector<studentas> vector3Vargsiukai;
-            std::string vectorFailas3 = failo_pavadinimas;
-            failo_skaitymas(vector3, vectorFailas3);
+            {
+                std::vector<studentas> vector3;
+                std::vector<studentas> vector3Vargsiukai;
+                std::string vectorFailas3 = failo_pavadinimas;
+                failo_skaitymas(vector3, vectorFailas3);
 
-            auto pradzia3 = std::chrono::steady_clock::now();
-            studentu_rusiavimas_3strat(vector3, vector3Vargsiukai);
-            auto pabaiga3 = std::chrono::steady_clock::now();
-            const std::chrono::duration<double> vector3Laikas = pabaiga3 - pradzia3;
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas_3strat(vector3, vector3Vargsiukai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                vector3Laikas = pabaiga - pradzia;
+            }
 
-            std::list<studentas> list3;
-            std::list<studentas> list3Vargsiukai;
-            std::string listFailas3 = failo_pavadinimas;
-            failo_skaitymas(list3, listFailas3);
+            {
+                std::list<studentas> list3;
+                std::list<studentas> list3Vargsiukai;
+                std::string listFailas3 = failo_pavadinimas;
+                failo_skaitymas(list3, listFailas3);
 
-            auto pradzia3 = std::chrono::steady_clock::now();
-            studentu_rusiavimas_3strat(list3, list3Vargsiukai);
-            auto pabaiga3 = std::chrono::steady_clock::now();
-            const std::chrono::duration<double> list3Laikas = pabaiga3 - pradzia3;
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas_3strat(list3, list3Vargsiukai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                list3Laikas = pabaiga - pradzia;
+            }
 
-            std::cout << "\n" << dydis << " studentu skirstymo laikai (sekundemis):\n"
-                    << "1 strategija (vector): " << vector1Laikas.count() << "\n"
-                    << "2 strategija (vector): " << vector2Laikas.count() << "\n"
-                    << "3 strategija (vector): " << vector3Laikas.count() << "\n"
-                    << "1 strategija (list):   " << list1Laikas.count() << "\n"
-                    << "2 strategija (list):   " << list2Laikas.count() << "\n"
-                    << "3 strategija (list):   " << list3Laikas.count() << "\n";
+            std::cout << "\n" << dydis << " studentu dalijimo laikai (sekundemis):\n"
+                    << "1 strategija (Vector): " << vector1Laikas.count() << "\n"
+                    << "2 strategija (Vector): " << vector2Laikas.count() << "\n"
+                    << "3 strategija (Vector): " << vector3Laikas.count() << "\n"
+                    << "1 strategija (List):   " << list1Laikas.count() << "\n"
+                    << "2 strategija (List):   " << list2Laikas.count() << "\n"
+                    << "3 strategija (List):   " << list3Laikas.count() << "\n";
         }
 }
 

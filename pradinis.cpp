@@ -28,8 +28,8 @@ int main()
     {
         int analize;
         std::cout << "Pasirinkite analize: \n";
-        std::cout << "1. Tik studentu skirstymo strategiju laikai (iveskite 1); \n";
-        std::cout << "2. Visa programos spartos analize (iveskite 2): \n";
+        std::cout << "1. Tik studentu dalijimo strategiju laikai (iveskite 1); \n";
+        std::cout << "2. Visa programos spartos analize (iveskite 2): ";
     while (!(std::cin >> analize) || (analize != 1 && analize != 2))
     {
         std::cout << "Klaida: neteisinga ivestis, iveskite 1 arba 2: ";
@@ -70,6 +70,7 @@ int main()
                 if (A.vardas != B.vardas) return A.vardas < B.vardas;
                 return A.pavarde < B.pavarde;
             });
+
         }
         else if (atsakymas2 == "n")
         {

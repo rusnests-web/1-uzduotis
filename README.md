@@ -10,6 +10,8 @@
 
 Programa atsitiktinai generuoja penkis tekstinius studentu sarasu failus is atitinkamai 1000, 10000, 100000, 1000000 ir 10000000 irasu. Kiekviena ju sudaro vardo, pavardes stulpeliai ir atsitiktinai parinktas kiekis namu darbu pazymiu stulpeliu (nuo 7 iki 20 imtinai). Namu darbu ir egzamino pazymiai generuojami atsitiktinai nuo 1 iki 10 imtinai.
 
+Studentu saraso failo pavyzdys:
+
 ![Sugeneruoto studentu saraso failo pavyzdys](nuotraukos/stud_sar_pvz.png)
 
 ### Failu kurimo laikas:
@@ -54,3 +56,23 @@ Zemiau pateikiami programos spartos analizes rezultatu ***vidurkiai*** Vector ir
 |10000000 irasu (17 ND)|62.052814|6.931588|17.658217|33.601936|42.680251|162.924806|
 ---
 **Isvada:** Siuo atveju sparciausiai vykdomas studentu dalijimas, o leciausiai - nuskaitymas. Skirtumas tarp funkciju vykdymo spartos List konteinerio atveju yra labiau pastebimas nei Vector tipo.
+
+## 3 studentu dalijimo strategiju spartos analize
+
+Naudotojas taip pat gali pasirinkti vykdyti tik studentu dalijimo funkcijos spartos analize pagal 3 strategijas:
+
+1. Bendro studentu konteinerio (Vector ir List) skaidymas i du naujus to paties tipo konteinerius: "vargsiuku" ir "kietiaku";
+2. Bendro studentu konteinerio (Vector ir List) skaidymas panaudojant tik viena nauja konteineri: "vargsiukai";
+3. Bendro studentu konteinerio (Vector ir List) skaidymas panaudojant greiciau veikiancia 2 strategija, itraukiant i ja efektyvu Partition metoda.
+
+Studentu dalijimo strategiju spartos analizes vykdymo pavyzdys:
+
+![Strategiju testo vykdymo pavyzdys](nuotraukos/strat_test_pvz.png)
+
+Zemiau pateikiami 3 studentu dalijimo strategiju spartos analizes rezultatu ***vidurkiai*** Vector ir List atvejais, apskaiciuoti atlikus tris testus:
+
+### 3 studentu dalijimo strategiju sparta (Vector):
+
+|Failas|1 strategija, s|2 strategija, s|3 strategija, s|
+|------|---------------|---------------|---------------|
+|1000 irasu (10 ND)|
