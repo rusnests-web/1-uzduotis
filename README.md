@@ -55,7 +55,7 @@ Zemiau pateikiami programos spartos analizes rezultatu ***vidurkiai*** Vector ir
 |1000000 irasu (19 ND)|8.367813|0.624856|1.328955|3.657743|4.594591|18.573957|
 |10000000 irasu (17 ND)|62.052814|6.931588|17.658217|33.601936|42.680251|162.924806|
 ---
-**Isvada:** Siuo atveju sparciausiai vykdomas studentu dalijimas, o leciausiai - nuskaitymas. Skirtumas tarp funkciju vykdymo spartos List konteinerio atveju yra labiau pastebimas nei Vector tipo.
+**Isvada:** Siuo atveju sparciausiai vykdomas studentu dalijimas, o leciausiai - nuskaitymas. Skirtumas tarp funkciju vykdymo spartos List konteinerio atveju yra labiau pastebimas nei Vector tipo, be to, bendras operaciju vykdymo laikas yra trumpesnis nei Vector atveju.
 
 ## 3 studentu dalijimo strategiju spartos analize
 
@@ -75,4 +75,22 @@ Zemiau pateikiami 3 studentu dalijimo strategiju spartos analizes rezultatu ***v
 
 |Failas|1 strategija, s|2 strategija, s|3 strategija, s|
 |------|---------------|---------------|---------------|
-|1000 irasu (10 ND)|
+|1000 irasu (10 ND)|0.000811|0.000495|0.000355|
+|10000 irasu (7 ND)|0.008551|0.005814|0.003515|
+|100000 irasu (10 ND)|0.060238|0.051621|0.034660|
+|1000000 irasu (19 ND)|0.703370|0.497072|0.379706|
+|10000000 irasu (17 ND)|7.443739|5.724879|3.906062|
+---
+**Isvada:** Siuo atveju leciausia yra 1 strategija, 2 strategija yra spartesne uz 1 strategija, o 3 strategija (2 strategija su Partition metodu) yra sparciausia.
+
+### 3 studentu dalijimo strategiju sparta (List):
+
+|Failas|1 strategija, s|2 strategija, s|3 strategija, s|
+|------|---------------|---------------|---------------|
+|1000 irasu (10 ND)|0.000874|0.000348|0.001098|
+|10000 irasu (7 ND)|0.004945|0.003822|0.005035|
+|100000 irasu (10 ND)|0.052069|0.041634|0.054542|
+|1000000 irasu (19 ND)|0.558411|0.427090|0.576835|
+|10000000 irasu (17 ND)|6.355367|4.551922|5.734487|
+---
+**Isvada:** Siuo atveju dominuojancias tendencijas izvelgti sunkiau, taciau beveik visu testu (isskyrus didziausio failo) metu leciausia yra 3 strategija, t.y. 2 strategija su Partition metodu (priesingai nei Vector atveju), o sparciausia - 2 strategija.

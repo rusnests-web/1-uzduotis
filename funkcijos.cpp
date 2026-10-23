@@ -357,9 +357,7 @@ void strategiju_analize()
     for (size_t dydis : dydziai)
         {
             const std::string failo_pavadinimas = "studentai_" + std::to_string(dydis) + ".txt";
-            std::chrono::duration<double> vector1Laikas, vector2Laikas;
-            std::chrono::duration<double> list1Laikas, list2Laikas;
-            std::chrono::duration<double> vector3Laikas, list3Laikas;
+            std::cout << "\n" << dydis << " studentu dalijimo laikai (sekundemis):\n";
             {
                 std::vector<studentas> vector1;
                 std::vector<studentas> vector1Vargsiukai;
@@ -370,7 +368,9 @@ void strategiju_analize()
                 auto pradzia = std::chrono::steady_clock::now();
                 studentu_rusiavimas(vector1, vector1Vargsiukai, vector1Kietiakai);
                 auto pabaiga = std::chrono::steady_clock::now();
-                vector1Laikas = pabaiga - pradzia;
+                const std::chrono::duration<double> laikas = pabaiga - pradzia;
+                std::cout << "1 strategija (Vector): " << std::fixed << std::setprecision(6)
+                          << laikas.count() << "\n" << std::flush;
             }
 
             {
@@ -382,7 +382,23 @@ void strategiju_analize()
                 auto pradzia = std::chrono::steady_clock::now();
                 studentu_rusiavimas_2strat(vector2, vector2Vargsiukai);
                 auto pabaiga = std::chrono::steady_clock::now();
-                vector2Laikas = pabaiga - pradzia;
+                const std::chrono::duration<double> laikas = pabaiga - pradzia;
+                std::cout << "2 strategija (Vector): " << std::fixed << std::setprecision(6)
+                          << laikas.count() << "\n" << std::flush;
+            }
+
+            {
+                std::vector<studentas> vector3;
+                std::vector<studentas> vector3Vargsiukai;
+                std::string vectorFailas3 = failo_pavadinimas;
+                failo_skaitymas(vector3, vectorFailas3);
+
+                auto pradzia = std::chrono::steady_clock::now();
+                studentu_rusiavimas_3strat(vector3, vector3Vargsiukai);
+                auto pabaiga = std::chrono::steady_clock::now();
+                const std::chrono::duration<double> laikas = pabaiga - pradzia;
+                std::cout << "3 strategija (Vector): " << std::fixed << std::setprecision(6)
+                          << laikas.count() << "\n" << std::flush;
             }
 
             {
@@ -395,7 +411,9 @@ void strategiju_analize()
                 auto pradzia = std::chrono::steady_clock::now();
                 studentu_rusiavimas(list1, list1Vargsiukai, list1Kietiakai);
                 auto pabaiga = std::chrono::steady_clock::now();
-                list1Laikas = pabaiga - pradzia;
+                const std::chrono::duration<double> laikas = pabaiga - pradzia;
+                std::cout << "1 strategija (List):   " << std::fixed << std::setprecision(6)
+                          << laikas.count() << "\n" << std::flush;
             }
 
             {
@@ -407,19 +425,9 @@ void strategiju_analize()
                 auto pradzia = std::chrono::steady_clock::now();
                 studentu_rusiavimas_2strat(list2, list2Vargsiukai);
                 auto pabaiga = std::chrono::steady_clock::now();
-                list2Laikas = pabaiga - pradzia;
-            }
-
-            {
-                std::vector<studentas> vector3;
-                std::vector<studentas> vector3Vargsiukai;
-                std::string vectorFailas3 = failo_pavadinimas;
-                failo_skaitymas(vector3, vectorFailas3);
-
-                auto pradzia = std::chrono::steady_clock::now();
-                studentu_rusiavimas_3strat(vector3, vector3Vargsiukai);
-                auto pabaiga = std::chrono::steady_clock::now();
-                vector3Laikas = pabaiga - pradzia;
+                const std::chrono::duration<double> laikas = pabaiga - pradzia;
+                std::cout << "2 strategija (List):   " << std::fixed << std::setprecision(6)
+                          << laikas.count() << "\n" << std::flush;
             }
 
             {
@@ -431,16 +439,10 @@ void strategiju_analize()
                 auto pradzia = std::chrono::steady_clock::now();
                 studentu_rusiavimas_3strat(list3, list3Vargsiukai);
                 auto pabaiga = std::chrono::steady_clock::now();
-                list3Laikas = pabaiga - pradzia;
+                const std::chrono::duration<double> laikas = pabaiga - pradzia;
+                std::cout << "3 strategija (List):   " << std::fixed << std::setprecision(6)
+                          << laikas.count() << "\n" << std::flush;
             }
-
-            std::cout << "\n" << dydis << " studentu dalijimo laikai (sekundemis):\n"
-                    << "1 strategija (Vector): " << vector1Laikas.count() << "\n"
-                    << "2 strategija (Vector): " << vector2Laikas.count() << "\n"
-                    << "3 strategija (Vector): " << vector3Laikas.count() << "\n"
-                    << "1 strategija (List):   " << list1Laikas.count() << "\n"
-                    << "2 strategija (List):   " << list2Laikas.count() << "\n"
-                    << "3 strategija (List):   " << list3Laikas.count() << "\n";
         }
 }
 
