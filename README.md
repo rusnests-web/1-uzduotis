@@ -1,5 +1,62 @@
 # 1-uzduotis
 
+## Releases
+
+* **v0.1:** Sudaro pagrindine programa *pradinis.cpp*, testinis studentu failas nuskaitymui *kursiokai.txt*, laikinai tuscias *README.md* failas tolimesnei dokumentacijai ir failas papildomu failu ignoravimui *.gitignore*.
+
+* **v0.2:** Sudaro ankstesnio release failai (pradetas pildyti *README.md* ir pratestas *pradinis.cpp*) ir nauji antrastiniai failai *funkcijos.h* ir *studentas.h* bei funkciju implementacijos failas *funkcijos.cpp*.
+
+* **v0.3:** Sudaro ankstesnio release failai (papildyti *README.md*, *pradinis.cpp*, *funkcijos.cpp* ir *funkcijos.h*) ir naujas nuotrauku albumas *nuotraukos*, naudojamas programos rezultatu dokumentacijai.
+
+* **v1.0:** Sudaro ankstesnio release failai (papildyti *README.md*, *pradinis.cpp*, *funkcijos.cpp*, *funkcijos.h* ir albumas *nuotraukos*).
+
+## Naudojimosi instrukcija
+
+Programa veikia naudotojui pateikiant trumpus atsakymus i pateiktas uzklausas, t.y. tam tikrais atvejais tai gali buti ivedama raide "t" ("taip") arba "n" ("ne"), norimo skaityti failo pavadinimas, studento vardas ir pavarde arba skaicius, atitinkantis norimo pasirinkimo kategorija.
+
+Programos vykdymo pavyzdys:
+
+![Programos pavyzdys](nuotraukos/prog_pvz.png)
+
+Programos pradzioje pasirinkus generuoti atsitiktinius failus arba dirbti su jau sukurtais, toliau galima rinktis is dvieju spartos testu: studentu dalijimo strategiju ir bendros programos spartos analizes (jei failu dar nera, jie bus sugeneruoti ir bus nurodyti ju kurimo laikai):
+
+![Programos pavyzdys2](nuotraukos/prog_pvz2.png)
+
+Kitu atveju, neskaitant duomenu is failo, naudotojui leidziama pasirinkti viena is dvieju studentu duomenu konteineriu (Vector arba List) ir nurodyti studentu skaiciu sarase (jei zinomas; priesingu atveju naudotojas gali ivesti kiek nori daug studentu duomenu, iki ives raide "q"). Veliau galima pasirinkti arba sugeneruoti studentu pazymius, arba ivesti juos ranka:
+
+Programos vykdymo pavyzdys su zinomu studentu skaiciumi:
+
+![Programos pavyzdys3](nuotraukos/prog_pvz3.png)
+
+Programos vykdymo pavyzdys su nezinomu studentu skaiciumi:
+
+![Programos pavyzdys4](nuotraukos/prog_pvz4.png)
+
+Galiausiai naudotojui leidziama pasirinkti viena is triju galutinio balo skaiciavimo budu (pagal vidurki, mediana arba abu):
+
+![Programos pavyzdys5](nuotraukos/prog_pvz5.png)
+
+Rezultatas: pateikiami studentu duomenys ir kiekvieno is ju, kaip objekto, adresas atmintyje:
+
+![Programos rezultato pavyzdys](nuotraukos/prog_rez_pvz.png)
+
+
+### Kompiliavimas ir paleidimas su CMake
+
+Reikalingi irankiai: CMake 3.13 arba naujesne versija ir C++11 palaikantis kompiliatorius (pvz. GCC, Clang arba MSVC).
+Noredami sukonfiguruoti ir sukompiliuoti programa, projekto root direktorijos terminale ivykdykite sias komandas:
+
+```
+cmake -S . -B build
+cmake --build build --config Release
+```
+
+Vykdomojo failo vieta priklauso nuo CMake generatoriaus. Priklausomai nuo jo, projekto root direktorijoje iveskite:
+
+* **MinGW Makefiles generatoriui:** build/studentu_programa.exe
+
+* **Visual Studio generatoriui:** build/Release/studentu_programa.exe 
+
 ## Testavimo aplinka
 
 * CPU: Intel Core i5-7200U
@@ -62,7 +119,9 @@ Zemiau pateikiami programos spartos analizes rezultatu ***vidurkiai*** Vector ir
 Naudotojas taip pat gali pasirinkti vykdyti tik studentu dalijimo funkcijos spartos analize pagal 3 strategijas:
 
 1. Bendro studentu konteinerio (Vector ir List) skaidymas i du naujus to paties tipo konteinerius: "vargsiuku" ir "kietiaku";
+
 2. Bendro studentu konteinerio (Vector ir List) skaidymas panaudojant tik viena nauja konteineri: "vargsiukai";
+
 3. Bendro studentu konteinerio (Vector ir List) skaidymas panaudojant greiciau veikiancia 2 strategija, itraukiant i ja efektyvu Partition metoda.
 
 Studentu dalijimo strategiju spartos analizes vykdymo pavyzdys:
