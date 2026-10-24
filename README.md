@@ -1,5 +1,62 @@
 # 1-uzduotis
 
+## Releases
+
+* **v0.1:** Sudaro pagrindine programa *pradinis.cpp*, testinis studentu failas nuskaitymui *kursiokai.txt*, laikinai tuscias *README.md* failas tolimesnei dokumentacijai ir failas papildomu failu ignoravimui *.gitignore*.
+
+* **v0.2:** Sudaro ankstesnio release failai (pradetas pildyti *README.md* ir pratestas *pradinis.cpp*) ir nauji antrastiniai failai *funkcijos.h* ir *studentas.h* bei funkciju implementacijos failas *funkcijos.cpp*.
+
+* **v0.3:** Sudaro ankstesnio release failai (papildyti *README.md*, *pradinis.cpp*, *funkcijos.cpp* ir *funkcijos.h*) ir naujas nuotrauku albumas *nuotraukos*, naudojamas programos rezultatu dokumentacijai.
+
+* **v1.0:** Sudaro ankstesnio release failai (papildyti *README.md*, *pradinis.cpp*, *funkcijos.cpp*, *funkcijos.h* ir albumas *nuotraukos*).
+
+## Naudojimosi instrukcija
+
+Programa veikia naudotojui pateikiant trumpus atsakymus i pateiktas uzklausas, t.y. tam tikrais atvejais tai gali buti ivedama raide "t" ("taip") arba "n" ("ne"), norimo skaityti failo pavadinimas, studento vardas ir pavarde arba skaicius, atitinkantis norimo pasirinkimo kategorija.
+
+Programos vykdymo pavyzdys:
+
+![Programos pavyzdys](nuotraukos/prog_pvz.png)
+
+Programos pradzioje pasirinkus generuoti atsitiktinius failus arba dirbti su jau sukurtais, toliau galima rinktis is dvieju spartos testu: studentu dalijimo strategiju ir bendros programos spartos analizes (jei failu dar nera, jie bus sugeneruoti ir bus nurodyti ju kurimo laikai):
+
+![Programos pavyzdys2](nuotraukos/prog_pvz2.png)
+
+Kitu atveju, neskaitant duomenu is failo, naudotojui leidziama pasirinkti viena is dvieju studentu duomenu konteineriu (Vector arba List) ir nurodyti studentu skaiciu sarase (jei zinomas; priesingu atveju naudotojas gali ivesti kiek nori daug studentu duomenu, iki ives raide "q"). Veliau galima pasirinkti arba sugeneruoti studentu pazymius, arba ivesti juos ranka:
+
+Programos vykdymo pavyzdys su zinomu studentu skaiciumi:
+
+![Programos pavyzdys3](nuotraukos/prog_pvz3.png)
+
+Programos vykdymo pavyzdys su nezinomu studentu skaiciumi:
+
+![Programos pavyzdys4](nuotraukos/prog_pvz4.png)
+
+Galiausiai naudotojui leidziama pasirinkti viena is triju galutinio balo skaiciavimo budu (pagal vidurki, mediana arba abu):
+
+![Programos pavyzdys5](nuotraukos/prog_pvz5.png)
+
+Rezultatas: pateikiami studentu duomenys ir kiekvieno is ju, kaip objekto, adresas atmintyje:
+
+![Programos rezultato pavyzdys](nuotraukos/prog_rez_pvz.png)
+
+
+### Kompiliavimas ir paleidimas su CMake
+
+Reikalingi irankiai: CMake 3.13 arba naujesne versija ir C++11 palaikantis kompiliatorius (pvz. GCC, Clang arba MSVC).
+Noredami sukonfiguruoti ir sukompiliuoti programa, projekto root direktorijos terminale ivykdykite sias komandas:
+
+```
+cmake -S . -B build
+cmake --build build --config Release
+```
+
+Vykdomojo failo vieta priklauso nuo CMake generatoriaus. Priklausomai nuo jo, projekto root direktorijoje iveskite:
+
+* **MinGW Makefiles generatoriui:** build/studentu_programa.exe
+
+* **Visual Studio generatoriui:** build/Release/studentu_programa.exe 
+
 ## Testavimo aplinka
 
 * CPU: Intel Core i5-7200U
@@ -9,6 +66,8 @@
 ## Failu kurimas
 
 Programa atsitiktinai generuoja penkis tekstinius studentu sarasu failus is atitinkamai 1000, 10000, 100000, 1000000 ir 10000000 irasu. Kiekviena ju sudaro vardo, pavardes stulpeliai ir atsitiktinai parinktas kiekis namu darbu pazymiu stulpeliu (nuo 7 iki 20 imtinai). Namu darbu ir egzamino pazymiai generuojami atsitiktinai nuo 1 iki 10 imtinai.
+
+Studentu saraso failo pavyzdys:
 
 ![Sugeneruoto studentu saraso failo pavyzdys](nuotraukos/stud_sar_pvz.png)
 
@@ -53,4 +112,44 @@ Zemiau pateikiami programos spartos analizes rezultatu ***vidurkiai*** Vector ir
 |1000000 irasu (19 ND)|8.367813|0.624856|1.328955|3.657743|4.594591|18.573957|
 |10000000 irasu (17 ND)|62.052814|6.931588|17.658217|33.601936|42.680251|162.924806|
 ---
-**Isvada:** Siuo atveju sparciausiai vykdomas studentu dalijimas, o leciausiai - nuskaitymas. Skirtumas tarp funkciju vykdymo spartos List konteinerio atveju yra labiau pastebimas nei Vector tipo.
+**Isvada:** Siuo atveju sparciausiai vykdomas studentu dalijimas, o leciausiai - nuskaitymas. Skirtumas tarp funkciju vykdymo spartos List konteinerio atveju yra labiau pastebimas nei Vector tipo, be to, bendras operaciju vykdymo laikas yra trumpesnis nei Vector atveju.
+
+## 3 studentu dalijimo strategiju spartos analize
+
+Naudotojas taip pat gali pasirinkti vykdyti tik studentu dalijimo funkcijos spartos analize pagal 3 strategijas:
+
+1. Bendro studentu konteinerio (Vector ir List) skaidymas i du naujus to paties tipo konteinerius: "vargsiuku" ir "kietiaku";
+
+2. Bendro studentu konteinerio (Vector ir List) skaidymas panaudojant tik viena nauja konteineri: "vargsiukai";
+
+3. Bendro studentu konteinerio (Vector ir List) skaidymas panaudojant greiciau veikiancia 2 strategija, itraukiant i ja efektyvu Partition metoda.
+
+Studentu dalijimo strategiju spartos analizes vykdymo pavyzdys:
+
+![Strategiju testo vykdymo pavyzdys](nuotraukos/strat_test_pvz.png)
+
+Zemiau pateikiami 3 studentu dalijimo strategiju spartos analizes rezultatu ***vidurkiai*** Vector ir List atvejais, apskaiciuoti atlikus tris testus:
+
+### 3 studentu dalijimo strategiju sparta (Vector):
+
+|Failas|1 strategija, s|2 strategija, s|3 strategija, s|
+|------|---------------|---------------|---------------|
+|1000 irasu (10 ND)|0.000811|0.000495|0.000355|
+|10000 irasu (7 ND)|0.008551|0.005814|0.003515|
+|100000 irasu (10 ND)|0.060238|0.051621|0.034660|
+|1000000 irasu (19 ND)|0.703370|0.497072|0.379706|
+|10000000 irasu (17 ND)|7.443739|5.724879|3.906062|
+---
+**Isvada:** Siuo atveju leciausia yra 1 strategija, 2 strategija yra spartesne uz 1 strategija, o 3 strategija (2 strategija su Partition metodu) yra sparciausia.
+
+### 3 studentu dalijimo strategiju sparta (List):
+
+|Failas|1 strategija, s|2 strategija, s|3 strategija, s|
+|------|---------------|---------------|---------------|
+|1000 irasu (10 ND)|0.000874|0.000348|0.001098|
+|10000 irasu (7 ND)|0.004945|0.003822|0.005035|
+|100000 irasu (10 ND)|0.052069|0.041634|0.054542|
+|1000000 irasu (19 ND)|0.558411|0.427090|0.576835|
+|10000000 irasu (17 ND)|6.355367|4.551922|5.734487|
+---
+**Isvada:** Siuo atveju dominuojancias tendencijas izvelgti sunkiau, taciau beveik visu testu (isskyrus didziausio failo) metu leciausia yra 3 strategija, t.y. 2 strategija su Partition metodu (priesingai nei Vector atveju), o sparciausia - 2 strategija.
